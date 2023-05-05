@@ -5,6 +5,7 @@
 //  Created by Maksim Ivanov on 05.05.2023.
 //
 
+import PersonalDictionary
 import SwiftUI
 
 @main
