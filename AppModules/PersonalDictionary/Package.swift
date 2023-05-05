@@ -14,11 +14,15 @@ let package = Package(
             targets: ["PersonalDictionary"]
         )
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/maksimn/CoreModule", from: "2.1.0")
+    ],
     targets: [
         .target(
             name: "PersonalDictionary",
-            dependencies: [],
+            dependencies: [
+                "CoreModule"
+            ],
             path: "Source",
             resources: []
         )
