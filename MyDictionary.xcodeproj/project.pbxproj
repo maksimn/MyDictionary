@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C0495372A0512280078E818 /* PersonalDictionary in Frameworks */ = {isa = PBXBuildFile; productRef = 0C0495362A0512280078E818 /* PersonalDictionary */; };
 		0C285E202A050A9600D092BB /* MyDictionaryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C285E1F2A050A9600D092BB /* MyDictionaryApp.swift */; };
-		0C285E222A050A9600D092BB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C285E212A050A9600D092BB /* ContentView.swift */; };
 		0C285E242A050A9A00D092BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C285E232A050A9A00D092BB /* Assets.xcassets */; };
 		0C285E272A050A9A00D092BB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C285E262A050A9A00D092BB /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -16,9 +16,9 @@
 /* Begin PBXFileReference section */
 		0C285E1C2A050A9600D092BB /* MyDictionary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyDictionary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C285E1F2A050A9600D092BB /* MyDictionaryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDictionaryApp.swift; sourceTree = "<group>"; };
-		0C285E212A050A9600D092BB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		0C285E232A050A9A00D092BB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0C285E262A050A9A00D092BB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		0CE205582A05116F004BF3EB /* PersonalDictionary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = PersonalDictionary; path = AppModules/PersonalDictionary; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,17 +26,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C0495372A0512280078E818 /* PersonalDictionary in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C0495352A0512280078E818 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		0C285E132A050A9600D092BB = {
 			isa = PBXGroup;
 			children = (
+				0CE205572A05116F004BF3EB /* Packages */,
 				0C285E1E2A050A9600D092BB /* MyDictionary */,
 				0C285E1D2A050A9600D092BB /* Products */,
+				0C0495352A0512280078E818 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -52,7 +62,6 @@
 			isa = PBXGroup;
 			children = (
 				0C285E1F2A050A9600D092BB /* MyDictionaryApp.swift */,
-				0C285E212A050A9600D092BB /* ContentView.swift */,
 				0C285E232A050A9A00D092BB /* Assets.xcassets */,
 				0C285E252A050A9A00D092BB /* Preview Content */,
 			);
@@ -65,6 +74,14 @@
 				0C285E262A050A9A00D092BB /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		0CE205572A05116F004BF3EB /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				0CE205582A05116F004BF3EB /* PersonalDictionary */,
+			);
+			name = Packages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +100,9 @@
 			dependencies = (
 			);
 			name = MyDictionary;
+			packageProductDependencies = (
+				0C0495362A0512280078E818 /* PersonalDictionary */,
+			);
 			productName = MyDictionary;
 			productReference = 0C285E1C2A050A9600D092BB /* MyDictionary.app */;
 			productType = "com.apple.product-type.application";
@@ -137,7 +157,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C285E222A050A9600D092BB /* ContentView.swift in Sources */,
 				0C285E202A050A9600D092BB /* MyDictionaryApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -339,6 +358,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0C0495362A0512280078E818 /* PersonalDictionary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PersonalDictionary;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0C285E142A050A9600D092BB /* Project object */;
 }
