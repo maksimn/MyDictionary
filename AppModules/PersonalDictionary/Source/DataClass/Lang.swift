@@ -7,18 +7,18 @@
 
 import CoreModule
 
-/// Language.
+/// A language.
 struct Lang: Equatable, CustomStringConvertible {
 
     typealias Id = Tagged<Lang, Int>
 
-    /// The identifier of a language.
+    /// The identifier of the language.
     let id: Id
 
-    /// The name of a language.
+    /// The name of the language.
     let name: String
 
-    /// The short name for a language ("EN" for English, "RU" for Russian etc.)
+    /// The short name of the language ("EN" for English, "RU" for Russian etc.)
     let shortName: String
 
     static func == (lhs: Lang, rhs: Lang) -> Bool {

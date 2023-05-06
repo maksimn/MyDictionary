@@ -5,8 +5,6 @@
 //  Created by Maxim Ivanov on 06.05.2023.
 //
 
-import SwiftUI
-
 struct ConfigFactory {
 
     func config() -> Config {
