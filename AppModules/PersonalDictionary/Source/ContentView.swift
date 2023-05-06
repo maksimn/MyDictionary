@@ -9,15 +9,24 @@ import SwiftUI
 
 public struct ContentView: View {
 
-    public init() { }
+    private let theme = Theme.data
+
+    public init() {
+        let factory = ConfigFactory()
+        let config = factory.config()
+
+        print(config)
+    }
 
     public var body: some View {
         VStack {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundColor(.accentColor)
-            Text("Oops, I did it again")
+            Text("My dictionary")
+                .foregroundColor(theme.textColor)
         }
+        .background(theme.backgroundColor)
         .padding()
     }
 }
