@@ -7,5 +7,5 @@
 
 struct Config {
 
-    let allLangs: [Lang]
+    let langData: LangData
 }
