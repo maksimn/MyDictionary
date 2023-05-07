@@ -12,7 +12,7 @@ struct LangPicker: ReducerProtocol {
     struct State: Equatable {
         var lang: Lang
         var langType: LangType
-        var isHidden = true
+        var isHidden: Bool
     }
 
     enum Action {
