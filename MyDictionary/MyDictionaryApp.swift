@@ -12,7 +12,7 @@ import SwiftUI
 struct MyDictionaryApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppView()
         }
     }
 }

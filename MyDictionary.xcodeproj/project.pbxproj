@@ -10,14 +10,12 @@
 		0C0495372A0512280078E818 /* PersonalDictionary in Frameworks */ = {isa = PBXBuildFile; productRef = 0C0495362A0512280078E818 /* PersonalDictionary */; };
 		0C285E202A050A9600D092BB /* MyDictionaryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C285E1F2A050A9600D092BB /* MyDictionaryApp.swift */; };
 		0C285E242A050A9A00D092BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C285E232A050A9A00D092BB /* Assets.xcassets */; };
-		0C285E272A050A9A00D092BB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C285E262A050A9A00D092BB /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0C285E1C2A050A9600D092BB /* MyDictionary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyDictionary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C285E1F2A050A9600D092BB /* MyDictionaryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDictionaryApp.swift; sourceTree = "<group>"; };
 		0C285E232A050A9A00D092BB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		0C285E262A050A9A00D092BB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		0CC35AB82A07D6290016C41F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		0CE205582A05116F004BF3EB /* PersonalDictionary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = PersonalDictionary; path = AppModules/PersonalDictionary; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -65,17 +63,8 @@
 				0CC35AB82A07D6290016C41F /* Info.plist */,
 				0C285E1F2A050A9600D092BB /* MyDictionaryApp.swift */,
 				0C285E232A050A9A00D092BB /* Assets.xcassets */,
-				0C285E252A050A9A00D092BB /* Preview Content */,
 			);
 			path = MyDictionary;
-			sourceTree = "<group>";
-		};
-		0C285E252A050A9A00D092BB /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				0C285E262A050A9A00D092BB /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		0CE205572A05116F004BF3EB /* Packages */ = {
@@ -147,7 +136,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C285E272A050A9A00D092BB /* Preview Assets.xcassets in Resources */,
 				0C285E242A050A9A00D092BB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,7 +275,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"MyDictionary/Preview Content\"";
 				DEVELOPMENT_TEAM = T96KB8H453;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -316,7 +303,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"MyDictionary/Preview Content\"";
 				DEVELOPMENT_TEAM = T96KB8H453;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
