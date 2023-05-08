@@ -31,6 +31,7 @@ struct LangPickerView: View {
                         Text(lang.name)
                     }
                 }
+                .frame(height: 100)
                 Button(action: {
                     viewStore.send(.hide)
                 }) {
@@ -40,7 +41,7 @@ struct LangPickerView: View {
                         .background(Color(red: 0.34, green: 0.34, blue: 0.34))
                 }
                 .cornerRadius(8)
-                .padding(.init(top: 0, leading: 0, bottom: 16, trailing: 0))
+                .padding(.init(top: 0, leading: 0, bottom: 12, trailing: 0))
             }
             .pickerStyle(.wheel)
         }
