@@ -8,7 +8,7 @@
 import CoreModule
 import Foundation
 
-struct Word: Equatable, Hashable, CustomStringConvertible {
+struct Word: Equatable, CustomStringConvertible {
 
     typealias Id = Tagged<Word, String>
 
@@ -16,15 +16,25 @@ struct Word: Equatable, Hashable, CustomStringConvertible {
 
     let text: String
 
-    var translationApiResponse: TranslationApiResponse?
+    var translationApiResponse: TranslationApiResponse? {
+        didSet {
+            onUpdate()
+        }
+    }
 
     let sourceLang: Lang
 
     let targetLang: Lang
 
-    var isFavorite: Bool
+    var isFavorite: Bool {
+        didSet {
+            onUpdate()
+        }
+    }
 
     let createdAt: Int
+
+    private(set) var updatedAt: Int
 
     init(
         id: Id = Id(raw: UUID().uuidString),
@@ -33,7 +43,8 @@ struct Word: Equatable, Hashable, CustomStringConvertible {
         sourceLang: Lang,
         targetLang: Lang,
         isFavorite: Bool = false,
-        createdAt: Int = Date().integer
+        createdAt: Int = Date().integer,
+        updatedAt: Int = Date().integer
     ) {
         self.id = id
         self.text = text
@@ -42,41 +53,28 @@ struct Word: Equatable, Hashable, CustomStringConvertible {
         self.targetLang = targetLang
         self.isFavorite = isFavorite
         self.createdAt = createdAt
-    }
-
-    static func == (lhs: Word, rhs: Word) -> Bool {
-        lhs.id == rhs.id &&
-        lhs.text == rhs.text &&
-        lhs.sourceLang == rhs.sourceLang &&
-        lhs.targetLang == rhs.targetLang &&
-        lhs.isFavorite == rhs.isFavorite &&
-        lhs.createdAt == rhs.createdAt
-    }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id.raw)
+        self.updatedAt = updatedAt
     }
 
     var description: String {
         """
         Word(id: \(id.raw), \
         text: \(text), \
-        translationApiResponse: \(translationApiResponseDescription), \
+        translationApiResponse: \(translationApiResponse != nil ? "TranslationApiResponse()" : "nil"), \
         sourceLang: \(sourceLang.id.raw), \
         targetLang: \(targetLang.id.raw), \
         isFavorite: \(isFavorite), \
-        createdAt: \(createdAt))\n
+        createdAt: \(createdAt)), \
+        updatedAt: \(updatedAt)
         """
     }
 
-    private var translationApiResponseDescription: String {
-        guard let translationApiResponse = translationApiResponse else { return "nil" }
-
-        return "\(translationApiResponse)"
+    private mutating func onUpdate() {
+        updatedAt = Date().integer
     }
 }
 
-struct TranslationApiResponse {
+struct TranslationApiResponse: Equatable {
 
     let data: Data
 
