@@ -8,11 +8,14 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct NewWordView<LangPickerBuilderType>: View where LangPickerBuilderType: SwiftViewBuilder {
+struct NewWordView<Builder>: View where Builder: SwiftViewBuilder {
 
     let store: StoreOf<NewWord>
-    let langPickerBuilder: LangPickerBuilderType
+    let langPickerBuilder: Builder
     let theme: Theme
+
+    @Environment(\.presentationMode)
+    var presentationMode: Binding<PresentationMode>
 
     var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
@@ -48,6 +51,7 @@ struct NewWordView<LangPickerBuilderType>: View where LangPickerBuilderType: Swi
                             .padding(.init(top: 0, leading: 16, bottom: 0, trailing: 16))
                             Button(action: {
                                 viewStore.send(.newWord)
+                                self.presentationMode.wrappedValue.dismiss()
                             }) {
                                 Text("OK")
                                     .padding(.init(top: 2, leading: 20, bottom: 2, trailing: 20))
@@ -70,14 +74,13 @@ struct NewWordView<LangPickerBuilderType>: View where LangPickerBuilderType: Swi
             .background(Color(white: 0, opacity: 0.7))
             .edgesIgnoringSafeArea(.all)
             .textFieldStyle(.roundedBorder)
+            .navigationBarBackButtonHidden(true)
         }
     }
 }
 
 struct NewWordView_Previews: PreviewProvider {
     static var previews: some View {
-        let config = ConfigFactory().config()
-        let builder = NewWordBuilder(config: config)
-        builder.build()
+        VStack {}
     }
 }

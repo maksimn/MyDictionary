@@ -9,34 +9,15 @@ import ComposableArchitecture
 import Foundation
 import SwiftUI
 
-final class NewWordBuilder {
+final class NewWordBuilder: SwiftViewBuilder {
 
     private let config: Config
 
-    private lazy var store = {
-        let langRepository = LangRepositoryImpl(
-            userDefaults: UserDefaults.standard,
-            data: config.langData
-        )
-        let initialState = NewWord.State(
-            text: "",
-            sourceLang: langRepository.sourceLang(),
-            targetLang: langRepository.targetLang(),
-            langPicker: .init(
-                lang: langRepository.sourceLang(),
-                langType: .source,
-                isHidden: true
-            )
-        )
+    private let store: StoreOf<NewWord>
 
-        return Store(
-            initialState: initialState,
-            reducer: NewWord(langRepository: langRepository)._printChanges()
-        )
-    }()
-
-    init(config: Config) {
+    init(config: Config, store: StoreOf<NewWord>) {
         self.config = config
+        self.store = store
     }
 
     func build() -> some View {

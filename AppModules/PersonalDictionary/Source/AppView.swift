@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-private let newWordBuilder = NewWordBuilder(config: ConfigFactory().config())
+private let builder = MainWordListBuilder(config: ConfigFactory().config())
 
 public struct AppView: View {
 
     public init() { }
 
     public var body: some View {
-        newWordBuilder.build()
+        builder.build()
     }
 }
