@@ -47,11 +47,13 @@ struct NewWordView<Builder>: View where Builder: SwiftViewBuilder {
                                     send: { .textChanged($0) }
                                 )
                             )
+                            .onSubmit {
+                                dismiss(viewStore)
+                            }
                             .background(theme.cellColor)
                             .padding(.init(top: 0, leading: 16, bottom: 0, trailing: 16))
                             Button(action: {
-                                viewStore.send(.newWord)
-                                self.presentationMode.wrappedValue.dismiss()
+                                dismiss(viewStore)
                             }) {
                                 Text("OK")
                                     .padding(.init(top: 2, leading: 20, bottom: 2, trailing: 20))
@@ -76,6 +78,11 @@ struct NewWordView<Builder>: View where Builder: SwiftViewBuilder {
             .textFieldStyle(.roundedBorder)
             .navigationBarBackButtonHidden(true)
         }
+    }
+
+    private func dismiss(_ viewStore: ViewStoreOf<NewWord>) {
+        viewStore.send(.newWord)
+        self.presentationMode.wrappedValue.dismiss()
     }
 }
 

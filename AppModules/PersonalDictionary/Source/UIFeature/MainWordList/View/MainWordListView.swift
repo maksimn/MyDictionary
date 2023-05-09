@@ -17,24 +17,54 @@ struct MainWordListView: View {
     var body: some View {
         WithViewStore(self.store) { viewStore in
             NavigationStack {
-                VStack {
-                    Spacer()
-                    NavigationLink {
-                        ZStack {
-                            IfLetStore(
-                                store.scope(state: \.newWord, action: MainWordList.Action.newWord)
-                            ) {
-                                NewWordBuilder(config: config, store: $0).build()
+                ZStack {
+                    List {
+                        ForEach(viewStore.wordList) { item in
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(item.word.text)
+                                        .lineLimit(1)
+                                        .font(.system(size: 20, weight: .bold))
+                                        .foregroundColor(theme.textColor)
+                                    Text("[translation]")
+                                        .lineLimit(1)
+                                        .font(theme.normalFont)
+                                        .foregroundColor(theme.textColor)
+                                }
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    Text(item.word.sourceLang.shortName)
+                                        .setLangShortNameStyle(theme)
+                                    Text(item.word.targetLang.shortName)
+                                        .setLangShortNameStyle(theme)
+                                }
                             }
                         }
-                        .onAppear {
-                            viewStore.send(.showNewWordView)
+                        .onDelete { indexSet in
+                            for index in indexSet {
+                                let item = viewStore.wordList[index]
+
+                                viewStore.send(.delete(item.word))
+                            }
                         }
-                    } label: {
-                        Image("icon-plus", bundle: Bundle.module)
-                            .resizable()
-                            .frame(width: 44, height: 44)
-                            .padding(.bottom, 24)
+                    }
+                    VStack {
+                        Spacer()
+                        NavigationLink {
+                            ZStack {
+                                IfLetStore(store.scope(state: \.newWord, action: MainWordList.Action.newWord)) {
+                                    NewWordBuilder(config: config, store: $0).build()
+                                }
+                            }
+                            .onAppear {
+                                viewStore.send(.showNewWordView)
+                            }
+                        } label: {
+                            Image("icon-plus", bundle: Bundle.module)
+                                .resizable()
+                                .frame(width: 44, height: 44)
+                                .padding(.bottom, 24)
+                        }
                     }
                 }
                 .background(theme.backgroundColor)
@@ -49,22 +79,11 @@ struct MainWordListView: View {
     }
 }
 
-struct MainWordListView_Previews: PreviewProvider {
-    static var previews: some View {
-        let config = ConfigFactory().config()
+extension Text {
 
-        MainWordListView(
-            config: config,
-            store: Store(
-                initialState: .init(),
-                reducer: MainWordList(
-                    langRepository: LangRepositoryImpl(
-                        userDefaults: UserDefaults.standard,
-                        data: config.langData
-                    )
-                )
-            ),
-            theme: Theme.data
-        )
+    func setLangShortNameStyle(_ theme: Theme) -> some View {
+        lineLimit(1)
+            .font(.system(size: 12, weight: .bold))
+            .foregroundColor(theme.secondaryTextColor)
     }
 }
