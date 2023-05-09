@@ -81,7 +81,14 @@ struct NewWordView<Builder>: View where Builder: SwiftViewBuilder {
     }
 
     private func dismiss(_ viewStore: ViewStoreOf<NewWord>) {
-        viewStore.send(.newWord)
+        let word = Word(
+            text: viewStore.text.trimmingCharacters(in: .whitespacesAndNewlines),
+            sourceLang: viewStore.sourceLang,
+            targetLang: viewStore.targetLang
+        )
+        let newWord = word.text.isEmpty ? nil : word
+
+        viewStore.send(.sendNewWord(newWord))
         self.presentationMode.wrappedValue.dismiss()
     }
 }
