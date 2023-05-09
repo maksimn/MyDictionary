@@ -10,10 +10,10 @@ import Foundation
 
 struct MainWordList: ReducerProtocol {
 
-    private let config: Config
+    private let langRepository: LangRepository
 
-    init(config: Config) {
-        self.config = config
+    init(langRepository: LangRepository) {
+        self.langRepository = langRepository
     }
 
     struct State: Equatable {
@@ -22,6 +22,7 @@ struct MainWordList: ReducerProtocol {
     }
 
     enum Action {
+        case showNewWordView
         case delete(Word)
         case newWord(NewWord.Action)
     }
@@ -31,12 +32,24 @@ struct MainWordList: ReducerProtocol {
             reduceInto(&state, action: action)
         }
         .ifLet(\.newWord, action: /Action.newWord) {
-            NewWord(langRepository: LangRepositoryImpl(userDefaults: UserDefaults.standard, data: config.langData))
+            NewWord(langRepository: langRepository)
         }
     }
 
     private func reduceInto(_ state: inout State, action: Action) -> EffectTask<Action> {
         switch action {
+        case .showNewWordView:
+            state.newWord = .init(
+                text: "",
+                sourceLang: langRepository.sourceLang(),
+                targetLang: langRepository.targetLang(),
+                langPicker: .init(
+                    lang: langRepository.sourceLang(),
+                    langType: .source,
+                    isHidden: true
+                )
+            )
+
         case .newWord(.newWord):
             guard let word = state.newWord?.newWord else { break }
 
