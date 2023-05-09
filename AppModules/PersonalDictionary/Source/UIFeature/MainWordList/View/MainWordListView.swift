@@ -75,6 +75,9 @@ struct MainWordListView: View {
                 }
                 .navigationTitle("My dictionary")
             }
+            .onAppear {
+                viewStore.send(.loadSavedMainWordList)
+            }
         }
     }
 }

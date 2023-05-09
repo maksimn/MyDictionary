@@ -34,7 +34,7 @@ struct Word: Equatable, CustomStringConvertible {
 
     let createdAt: Int
 
-    private(set) var updatedAt: Int
+    var updatedAt: Int
 
     init(
         id: Id = Id(raw: UUID().uuidString),
@@ -60,11 +60,11 @@ struct Word: Equatable, CustomStringConvertible {
         """
         Word(id: \(id.raw), \
         text: \(text), \
-        translationApiResponse: \(translationApiResponse != nil ? "TranslationApiResponse()" : "nil"), \
+        translationApiResponse: \(translationApiResponse != nil ? "TranslationApiResponse(...)" : "nil"), \
         sourceLang: \(sourceLang.id.raw), \
         targetLang: \(targetLang.id.raw), \
         isFavorite: \(isFavorite), \
-        createdAt: \(createdAt)), \
+        createdAt: \(createdAt), \
         updatedAt: \(updatedAt)
         """
     }
@@ -75,6 +75,8 @@ struct Word: Equatable, CustomStringConvertible {
 }
 
 struct TranslationApiResponse: Equatable {
+
+    let url: String
 
     let data: Data
 

@@ -20,23 +20,11 @@ struct NewWord: ReducerProtocol {
         var sourceLang: Lang
         var targetLang: Lang
         var langPicker: LangPicker.State
-
-        var newWord: Word? {
-            let word = Word(
-                text: text.trimmingCharacters(in: .whitespacesAndNewlines),
-                sourceLang: sourceLang,
-                targetLang: targetLang
-            )
-
-            guard !word.text.isEmpty else { return nil }
-
-            return word
-        }
     }
 
     enum Action {
         case textChanged(String)
-        case newWord
+        case sendNewWord(Word?)
         case langPicker(LangPicker.Action)
     }
 

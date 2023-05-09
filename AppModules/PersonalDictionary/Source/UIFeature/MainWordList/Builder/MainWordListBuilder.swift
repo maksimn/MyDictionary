@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import CoreModule
 import SwiftUI
 
 struct MainWordListBuilder {
@@ -15,22 +16,19 @@ struct MainWordListBuilder {
     private let store: StoreOf<MainWordList>
 
     init(config: Config) {
-        let lang1 = config.langData.allLangs[0]
-        let lang2 = config.langData.allLangs[1]
-        let words = [
-            "Banana", "Potato", "Tomato",
-            "Banana", "Potato", "Tomato",
-            "Banana", "Potato", "Tomato",
-            "Banana", "Potato", "Tomato"
-        ]
+        let logger = LoggerImpl(category: "MainWordList")
+        let wordListRepository = WordListRepositoryImpl(logger: logger)
+        let loadSavedMainWordListEffect = LoadSavedMainWordListEffect(
+            wordListRepository: wordListRepository,
+            logger: logger
+        )
+        let createWordEffect = CreateWordEffect(wordListRepository: wordListRepository, logger: logger)
         self.config = config
         self.store = Store(
-            initialState: .init(
-                wordList: IdentifiedArrayOf(uniqueElements: words.map {
-                    IdentifiedWord(word: Word(text: $0, sourceLang: lang1, targetLang: lang2))
-                })
-            ),
+            initialState: .init(),
             reducer: MainWordList(
+                loadSavedMainWordListEffect: loadSavedMainWordListEffect,
+                createWordEffect: createWordEffect,
                 langRepository: LangRepositoryImpl(userDefaults: UserDefaults.standard, data: config.langData)
             )._printChanges()
         )

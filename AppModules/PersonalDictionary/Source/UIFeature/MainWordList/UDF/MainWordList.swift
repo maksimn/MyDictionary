@@ -6,13 +6,18 @@
 //
 
 import ComposableArchitecture
-import Foundation
 
 struct MainWordList: ReducerProtocol {
 
+    private let loadSavedMainWordListEffect: MainWordListEffect
+    private let createWordEffect: WordEffect
     private let langRepository: LangRepository
 
-    init(langRepository: LangRepository) {
+    init(loadSavedMainWordListEffect: MainWordListEffect,
+         createWordEffect: WordEffect,
+         langRepository: LangRepository) {
+        self.loadSavedMainWordListEffect = loadSavedMainWordListEffect
+        self.createWordEffect = createWordEffect
         self.langRepository = langRepository
     }
 
@@ -22,6 +27,8 @@ struct MainWordList: ReducerProtocol {
     }
 
     enum Action {
+        case loadSavedMainWordList
+        case savedWordListLoaded([Word])
         case showNewWordView
         case delete(Word)
         case newWord(NewWord.Action)
@@ -38,22 +45,23 @@ struct MainWordList: ReducerProtocol {
 
     private func reduceInto(_ state: inout State, action: Action) -> EffectTask<Action> {
         switch action {
-        case .showNewWordView:
-            state.newWord = .init(
-                text: "",
-                sourceLang: langRepository.sourceLang(),
-                targetLang: langRepository.targetLang(),
-                langPicker: .init(
-                    lang: langRepository.sourceLang(),
-                    langType: .source,
-                    isHidden: true
-                )
+        case .loadSavedMainWordList:
+            return loadSavedMainWordListEffect.run()
+
+        case .savedWordListLoaded(let wordList):
+            state.wordList = IdentifiedArrayOf(
+                uniqueElements: wordList.map { IdentifiedWord(word: $0) }
             )
 
-        case .newWord(.newWord):
-            guard let word = state.newWord?.newWord else { break }
+        case .showNewWordView:
+            state.newWord = newWordInitialState()
+
+        case .newWord(.sendNewWord(let word)):
+            guard let word = word else { break }
 
             state.wordList.insert(IdentifiedWord(word: word), at: 0)
+
+            return createWordEffect.run(word)
 
         case .delete(let word):
             guard let position = state.wordList.firstIndex(where: { $0.word.id == word.id }) else { break }
@@ -65,6 +73,19 @@ struct MainWordList: ReducerProtocol {
         }
 
         return .none
+    }
+
+    private func newWordInitialState() -> NewWord.State {
+        .init(
+            text: "",
+            sourceLang: langRepository.sourceLang(),
+            targetLang: langRepository.targetLang(),
+            langPicker: .init(
+                lang: langRepository.sourceLang(),
+                langType: .source,
+                isHidden: true
+            )
+        )
     }
 }
 
