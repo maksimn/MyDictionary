@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import CoreModule
 import Foundation
 import SwiftUI
 

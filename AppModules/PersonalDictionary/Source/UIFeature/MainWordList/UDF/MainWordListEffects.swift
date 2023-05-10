@@ -20,13 +20,13 @@ protocol WordEffect {
 
 struct LoadSavedMainWordListEffect: MainWordListEffect {
 
-    let wordListRepository: WordListRepository
+    let wordListFetcher: WordListFetcher
     let logger: Logger
 
     func run() -> EffectTask<MainWordList.Action> {
         .run { send in
             do {
-                let wordList = try wordListRepository.wordList()
+                let wordList = try wordListFetcher.wordList()
 
                 await send(.savedWordListLoaded(wordList))
             } catch {
@@ -38,7 +38,7 @@ struct LoadSavedMainWordListEffect: MainWordListEffect {
 
 struct CreateWordEffect: WordEffect {
 
-    let wordListRepository: WordListRepository
+    let dbPerformer: CreateWordDbPerformer
     let logger: Logger
 
     func run(_ word: Word) -> EffectTask<MainWordList.Action> {
@@ -46,7 +46,7 @@ struct CreateWordEffect: WordEffect {
             do {
                 logger.debug("Create word start: \(word) ")
 
-                try await wordListRepository.create(word: word)
+                try await dbPerformer.create(word: word)
 
                 logger.debug("Create word success: \(word) ")
             } catch {
@@ -59,7 +59,7 @@ struct CreateWordEffect: WordEffect {
 
 struct DeleteWordEffect: WordEffect {
 
-    let wordListRepository: WordListRepository
+    let dbPerformer: DeleteWordDbPerformer
     let logger: Logger
 
     func run(_ word: Word) -> EffectTask<MainWordList.Action> {
@@ -67,7 +67,7 @@ struct DeleteWordEffect: WordEffect {
             do {
                 logger.debug("Delete word start: \(word) ")
 
-                try await wordListRepository.delete(word: word)
+                try await dbPerformer.delete(word: word)
 
                 logger.debug("Delete word success: \(word) ")
             } catch {

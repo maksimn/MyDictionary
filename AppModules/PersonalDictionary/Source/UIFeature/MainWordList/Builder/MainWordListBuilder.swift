@@ -17,19 +17,20 @@ struct MainWordListBuilder {
 
     init(config: Config) {
         let logger = LoggerImpl(category: "MainWordList")
-        let wordListRepository = WordListRepositoryImpl(logger: logger)
-        let loadSavedMainWordListEffect = LoadSavedMainWordListEffect(
-            wordListRepository: wordListRepository,
-            logger: logger
-        )
-        let createWordEffect = CreateWordEffect(wordListRepository: wordListRepository, logger: logger)
+        let realmFactory = RealmFactoryImpl(logger: logger)
         self.config = config
         self.store = Store(
             initialState: .init(),
             reducer: MainWordList(
-                loadSavedMainWordListEffect: loadSavedMainWordListEffect,
-                createWordEffect: createWordEffect,
-                deleteWordEffect: DeleteWordEffect(wordListRepository: wordListRepository, logger: logger),
+                loadSavedMainWordListEffect: LoadSavedMainWordListEffect(
+                    wordListFetcher: WordListFetcherImpl(realmFactory: realmFactory), logger: logger
+                ),
+                createWordEffect: CreateWordEffect(
+                    dbPerformer: CreateWordDbPerformerImpl(realmFactory: realmFactory), logger: logger
+                ),
+                deleteWordEffect: DeleteWordEffect(
+                    dbPerformer: DeleteWordDbPerformerImpl(realmFactory: realmFactory), logger: logger
+                ),
                 langRepository: LangRepositoryImpl(userDefaults: UserDefaults.standard, data: config.langData)
             )._printChanges()
         )
