@@ -56,3 +56,24 @@ struct CreateWordEffect: WordEffect {
         }
     }
 }
+
+struct DeleteWordEffect: WordEffect {
+
+    let wordListRepository: WordListRepository
+    let logger: Logger
+
+    func run(_ word: Word) -> EffectTask<MainWordList.Action> {
+        .run { send in
+            do {
+                logger.debug("Delete word start: \(word) ")
+
+                try await wordListRepository.delete(word: word)
+
+                logger.debug("Delete word success: \(word) ")
+            } catch {
+                logger.log("Delete word error, word: \(word)", level: .error)
+                logger.errorWithContext(error)
+            }
+        }
+    }
+}

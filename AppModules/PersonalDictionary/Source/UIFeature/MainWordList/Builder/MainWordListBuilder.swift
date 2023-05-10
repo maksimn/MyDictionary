@@ -29,6 +29,7 @@ struct MainWordListBuilder {
             reducer: MainWordList(
                 loadSavedMainWordListEffect: loadSavedMainWordListEffect,
                 createWordEffect: createWordEffect,
+                deleteWordEffect: DeleteWordEffect(wordListRepository: wordListRepository, logger: logger),
                 langRepository: LangRepositoryImpl(userDefaults: UserDefaults.standard, data: config.langData)
             )._printChanges()
         )
