@@ -10,4 +10,6 @@ protocol WordListRepository {
     func wordList() throws -> [Word]
 
     func create(word: Word) async throws
+
+    func delete(word: Word) async throws
 }

@@ -11,13 +11,16 @@ struct MainWordList: ReducerProtocol {
 
     private let loadSavedMainWordListEffect: MainWordListEffect
     private let createWordEffect: WordEffect
+    private let deleteWordEffect: WordEffect
     private let langRepository: LangRepository
 
     init(loadSavedMainWordListEffect: MainWordListEffect,
          createWordEffect: WordEffect,
+         deleteWordEffect: WordEffect,
          langRepository: LangRepository) {
         self.loadSavedMainWordListEffect = loadSavedMainWordListEffect
         self.createWordEffect = createWordEffect
+        self.deleteWordEffect = deleteWordEffect
         self.langRepository = langRepository
     }
 
@@ -67,6 +70,8 @@ struct MainWordList: ReducerProtocol {
             guard let position = state.wordList.firstIndex(where: { $0.word.id == word.id }) else { break }
 
             state.wordList.remove(at: position)
+
+            return deleteWordEffect.run(word)
 
         default:
             break

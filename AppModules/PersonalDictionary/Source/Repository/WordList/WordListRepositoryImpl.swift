@@ -18,17 +18,18 @@ final class WordListRepositoryImpl: WordListRepository {
 
     func wordList() throws -> [Word] {
         guard let realm = realm() else {
-            throw WLRError.cannotCreateRealm
+            throw WLRError.realmNotCreated
         }
 
         return realm.objects(WordDAO.self)
+            .sorted(byKeyPath: "createdAt", ascending: false)
             .compactMap { Word($0) }
     }
 
     func create(word: Word) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             guard let realm = realm() else {
-                return continuation.resume(throwing: WLRError.cannotCreateRealm)
+                return continuation.resume(throwing: WLRError.realmNotCreated)
             }
 
             do {
@@ -36,6 +37,27 @@ final class WordListRepositoryImpl: WordListRepository {
                     let wordDAO = WordDAO(word)
 
                     realm.add(wordDAO)
+                    continuation.resume()
+                }
+            } catch {
+                continuation.resume(throwing: error)
+            }
+        }
+    }
+
+    func delete(word: Word) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            guard let realm = realm() else {
+                return continuation.resume(throwing: WLRError.realmNotCreated)
+            }
+
+            do {
+                try realm.write {
+                    let wordDAO = realm.objects(WordDAO.self).where {
+                        $0._id == word.id.raw
+                    }
+
+                    realm.delete(wordDAO)
                     continuation.resume()
                 }
             } catch {
@@ -56,6 +78,6 @@ final class WordListRepositoryImpl: WordListRepository {
     }
 
     enum WLRError: Error {
-        case cannotCreateRealm
+        case realmNotCreated
     }
 }
