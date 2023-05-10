@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import CoreModule
 import SwiftUI
 
 struct LangPickerBuilder: SwiftViewBuilder {
