@@ -21,6 +21,10 @@ class WordDAO: Object {
     convenience init(_ word: Word) {
         self.init()
         _id = word.id.raw
+        update(from: word)
+    }
+
+    func update(from word: Word) {
         text = word.text
 
         if let response = word.translationApiResponse {
@@ -72,13 +76,9 @@ extension Word {
             translationApiResponse = TranslationApiResponse(responseDAO)
         }
 
-        if let sourceLang = dao.sourceLang {
+        if let sourceLang = dao.sourceLang,
+            let targetLang = dao.targetLang {
             self.sourceLang = Lang(sourceLang)
-        } else {
-            return nil
-        }
-
-        if let targetLang = dao.targetLang {
             self.targetLang = Lang(targetLang)
         } else {
             return nil

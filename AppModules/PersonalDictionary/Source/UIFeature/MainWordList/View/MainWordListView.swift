@@ -26,7 +26,8 @@ struct MainWordListView: View {
                                         .lineLimit(1)
                                         .font(.system(size: 20, weight: .bold))
                                         .foregroundColor(theme.textColor)
-                                    Text("[translation]")
+                                    Text(item.word.translationApiResponse?.httpResponseStatusCode == 200 ?
+                                         "<some translation>" : "<no translation>")
                                         .lineLimit(1)
                                         .font(theme.normalFont)
                                         .foregroundColor(theme.textColor)

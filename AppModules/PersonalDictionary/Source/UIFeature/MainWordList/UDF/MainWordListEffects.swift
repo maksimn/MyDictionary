@@ -38,19 +38,37 @@ struct LoadSavedMainWordListEffect: MainWordListEffect {
 
 struct CreateWordEffect: WordEffect {
 
-    let dbPerformer: CreateWordDbPerformer
+    let createWordDbPerformer: CreateWordDbPerformer
+    let updateWordDbPerformer: UpdateWordDbPerformer
+    let translationService: TranslationService
     let logger: Logger
 
     func run(_ word: Word) -> EffectTask<MainWordList.Action> {
         .run { send in
             do {
-                logger.debug("Create word start: \(word) ")
+                logger.debug("Create word effect start: \(word)")
+                logger.debug("Create word in the device DB start: \(word)")
 
-                try await dbPerformer.create(word: word)
+                try await createWordDbPerformer.create(word: word)
 
-                logger.debug("Create word success: \(word) ")
+                logger.debug("Create word in the device DB success: \(word)")
+
+                logger.debug("Fetch translation from the remote API start, word = \(word)")
+
+                let updatedWord = try await translationService.fetchTranslation(for: word)
+
+                logger.debug("Fetch translation from the remote API success, word = \(updatedWord)")
+
+                await send(.wordUpdated(updatedWord))
+
+                logger.debug("Update word in the device DB start: \(updatedWord)")
+
+                try await updateWordDbPerformer.update(word: updatedWord)
+
+                logger.debug("Update word in the device DB success: \(updatedWord)")
+                logger.debug("Create word effect success: \(updatedWord)")
             } catch {
-                logger.log("Create word error, word: \(word)", level: .error)
+                logger.log("Create word effect error: \(word)", level: .error)
                 logger.errorWithContext(error)
             }
         }
