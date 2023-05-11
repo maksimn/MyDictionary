@@ -26,7 +26,13 @@ struct MainWordListBuilder {
                     wordListFetcher: WordListFetcherImpl(realmFactory: realmFactory), logger: logger
                 ),
                 createWordEffect: CreateWordEffect(
-                    dbPerformer: CreateWordDbPerformerImpl(realmFactory: realmFactory), logger: logger
+                    createWordDbPerformer: CreateWordDbPerformerImpl(realmFactory: realmFactory),
+                    updateWordDbPerformer: UpdateWordDbPerformerImpl(realmFactory: realmFactory),
+                    translationService: PonsTranslationService(
+                        secret: config.translationApiKey,
+                        httpClient: LoggableHttpClient(logger: logger)
+                    ),
+                    logger: logger
                 ),
                 deleteWordEffect: DeleteWordEffect(
                     dbPerformer: DeleteWordDbPerformerImpl(realmFactory: realmFactory), logger: logger

@@ -1,18 +1,18 @@
 //
-//  LangRepositoryImpl.swift
+//  UpdateWordDbPerformer.swift
 //  PersonalDictionary
 //
-//  Created by Maxim Ivanov on 30.09.2021.
+//  Created by Maxim Ivanov on 11.05.2023.
 //
 
 import RealmSwift
 
-protocol DeleteWordDbPerformer {
+protocol UpdateWordDbPerformer {
 
-    func delete(word: Word) async throws
+    func update(word: Word) async throws
 }
 
-struct DeleteWordDbPerformerImpl: DeleteWordDbPerformer {
+struct UpdateWordDbPerformerImpl: UpdateWordDbPerformer {
 
     private let realmFactory: RealmFactory
 
@@ -20,11 +20,11 @@ struct DeleteWordDbPerformerImpl: DeleteWordDbPerformer {
         self.realmFactory = realmFactory
     }
 
-    func delete(word: Word) async throws {
+    func update(word: Word) async throws {
         try await make(operation: { (realm, word) in
             guard let wordDAO = realm.object(ofType: WordDAO.self, forPrimaryKey: word.id.raw) else { return }
 
-            realm.delete(wordDAO)
+            wordDAO.update(from: word)
         }, with: word, realmFactory: realmFactory)
     }
 }

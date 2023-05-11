@@ -9,7 +9,8 @@ struct ConfigFactory {
 
     func config() -> Config {
         Config(
-            langData: langData()
+            langData: langData(),
+            translationApiKey: ""
         )
     }
 

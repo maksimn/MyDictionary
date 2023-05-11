@@ -33,6 +33,7 @@ struct MainWordList: ReducerProtocol {
         case loadSavedMainWordList
         case savedWordListLoaded([Word])
         case showNewWordView
+        case wordUpdated(Word)
         case delete(Word)
         case newWord(NewWord.Action)
     }
@@ -66,6 +67,11 @@ struct MainWordList: ReducerProtocol {
 
             return createWordEffect.run(word)
 
+        case .wordUpdated(let word):
+            guard let position = state.wordList.firstIndex(where: { $0.word.id == word.id }) else { break }
+
+            state.wordList[position] = IdentifiedWord(word: word)
+
         case .delete(let word):
             guard let position = state.wordList.firstIndex(where: { $0.word.id == word.id }) else { break }
 
@@ -97,6 +103,6 @@ struct MainWordList: ReducerProtocol {
 struct IdentifiedWord: Equatable, Identifiable {
     var word: Word
     var id: String {
-        "\(word.id.raw)-\(word.updatedAt)"
+        word.id.raw
     }
 }

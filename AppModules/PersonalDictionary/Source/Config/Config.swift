@@ -8,4 +8,6 @@
 struct Config {
 
     let langData: LangData
+
+    let translationApiKey: String
 }
