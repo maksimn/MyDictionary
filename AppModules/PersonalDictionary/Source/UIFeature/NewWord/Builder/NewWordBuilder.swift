@@ -7,7 +7,6 @@
 
 import ComposableArchitecture
 import CoreModule
-import Foundation
 import SwiftUI
 
 final class NewWordBuilder: SwiftViewBuilder {

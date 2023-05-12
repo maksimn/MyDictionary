@@ -1,5 +1,5 @@
 //
-//  LangRepositoryImpl.swift
+//  CreateWordDbWorker.swift
 //  PersonalDictionary
 //
 //  Created by Maxim Ivanov on 30.09.2021.
@@ -7,12 +7,12 @@
 
 import RealmSwift
 
-protocol CreateWordDbPerformer {
+protocol CreateWordDbWorker {
 
     func create(word: Word) async throws
 }
 
-struct CreateWordDbPerformerImpl: CreateWordDbPerformer {
+struct CreateWordDbWorkerImpl: CreateWordDbWorker {
 
     private let realmFactory: RealmFactory
 
