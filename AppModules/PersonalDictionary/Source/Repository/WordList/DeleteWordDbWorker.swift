@@ -1,5 +1,5 @@
 //
-//  LangRepositoryImpl.swift
+//  DeleteWordDbWorker.swift
 //  PersonalDictionary
 //
 //  Created by Maxim Ivanov on 30.09.2021.
@@ -7,12 +7,12 @@
 
 import RealmSwift
 
-protocol DeleteWordDbPerformer {
+protocol DeleteWordDbWorker {
 
     func delete(word: Word) async throws
 }
 
-struct DeleteWordDbPerformerImpl: DeleteWordDbPerformer {
+struct DeleteWordDbWorkerImpl: DeleteWordDbWorker {
 
     private let realmFactory: RealmFactory
 

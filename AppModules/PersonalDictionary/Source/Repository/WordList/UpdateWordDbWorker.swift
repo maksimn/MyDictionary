@@ -1,5 +1,5 @@
 //
-//  UpdateWordDbPerformer.swift
+//  UpdateWordDbWorker.swift
 //  PersonalDictionary
 //
 //  Created by Maxim Ivanov on 11.05.2023.
@@ -7,12 +7,12 @@
 
 import RealmSwift
 
-protocol UpdateWordDbPerformer {
+protocol UpdateWordDbWorker {
 
     func update(word: Word) async throws
 }
 
-struct UpdateWordDbPerformerImpl: UpdateWordDbPerformer {
+struct UpdateWordDbWorkerImpl: UpdateWordDbWorker {
 
     private let realmFactory: RealmFactory
 
