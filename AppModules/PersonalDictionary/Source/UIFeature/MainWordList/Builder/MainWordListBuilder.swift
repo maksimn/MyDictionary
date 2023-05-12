@@ -32,6 +32,7 @@ struct MainWordListBuilder {
                         secret: config.translationApiKey,
                         httpClient: LoggableHttpClient(logger: logger)
                     ),
+                    translationDecoder: PonsTranslationDecoder(),
                     logger: logger
                 ),
                 deleteWordEffect: DeleteWordEffect(
