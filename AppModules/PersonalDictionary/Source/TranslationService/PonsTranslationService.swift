@@ -23,7 +23,7 @@ final class PonsTranslationService: TranslationService {
         self.httpClient = httpClient
     }
 
-    func fetchTranslation(for word: Word) async throws -> Word {
+    func fetchTranslationData(for word: Word) async throws -> Word {
         let sourceLang = word.sourceLang.shortName.lowercased()
         let targetLang = word.targetLang.shortName.lowercased()
         var query = URLComponents()

@@ -7,5 +7,5 @@
 
 protocol TranslationService {
 
-    func fetchTranslation(for word: Word) async throws -> Word
+    func fetchTranslationData(for word: Word) async throws -> Word
 }

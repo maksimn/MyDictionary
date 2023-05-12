@@ -11,6 +11,7 @@ import RealmSwift
 class WordDAO: Object {
     @Persisted(primaryKey: true) var _id: String
     @Persisted var text: String
+    @Persisted var translation: String
     @Persisted var translationApiResponse: TranslationApiResponseDAO?
     @Persisted var sourceLang: LangDAO?
     @Persisted var targetLang: LangDAO?
@@ -26,6 +27,7 @@ class WordDAO: Object {
 
     func update(from word: Word) {
         text = word.text
+        translation = word.translation
 
         if let response = word.translationApiResponse {
             translationApiResponse = TranslationApiResponseDAO(response)
@@ -71,6 +73,7 @@ extension Word {
     init?(_ dao: WordDAO) {
         id = .init(raw: dao._id)
         text = dao.text
+        translation = dao.translation
 
         if let responseDAO = dao.translationApiResponse {
             translationApiResponse = TranslationApiResponse(responseDAO)
