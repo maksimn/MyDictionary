@@ -12,16 +12,13 @@ final class PonsTranslationDecoder: TranslationDecoder {
     func decodeTranslation(for word: Word) async throws -> String {
         return try await withCheckedThrowingContinuation { continuation in
             do {
-                guard let translationApiResponse = word.translationApiResponse else {
+                guard let translationApiResponse = word.translationApiResponse,
+                    translationApiResponse.httpResponseStatusCode == 200 else {
                     throw PonsTranslationDecoderError.noTranslationData(word)
                 }
 
                 guard translationApiResponse.url.starts(with: "https://api.pons.com/v1") else {
                     throw PonsTranslationDecoderError.ponsApiNotSupported
-                }
-
-                guard translationApiResponse.httpResponseStatusCode == 200 else {
-                    return continuation.resume(returning: "")
                 }
 
                 let ponsArray = try JSONDecoder().decode([PonsResponseData].self, from: translationApiResponse.data)
