@@ -20,6 +20,10 @@ final class PonsTranslationDecoder: TranslationDecoder {
                     throw PonsTranslationDecoderError.ponsApiNotSupported
                 }
 
+                guard translationApiResponse.httpResponseStatusCode == 200 else {
+                    return continuation.resume(returning: "")
+                }
+
                 let ponsArray = try JSONDecoder().decode([PonsResponseData].self, from: translationApiResponse.data)
                 let str = ponsArray.first?.hits.first?.roms.first?.arabs.first?.translations.first?.target ?? ""
                 var translation = ""

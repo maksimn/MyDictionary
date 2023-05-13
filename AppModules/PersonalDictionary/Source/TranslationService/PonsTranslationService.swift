@@ -51,7 +51,7 @@ final class PonsTranslationService: TranslationService {
                         }
                     },
                     receiveValue: { httpResponse in
-                        guard httpResponse.response.statusCode == 200 else {
+                        guard 200...299 ~= httpResponse.response.statusCode else {
                             return continuation.resume(
                                 throwing: PonsTranslationServiceError.translationNotFetched(word)
                             )
