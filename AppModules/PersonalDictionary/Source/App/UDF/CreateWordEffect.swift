@@ -12,8 +12,7 @@ struct CreateWordEffect: WordEffect {
 
     let createWordDbWorker: CreateWordDbWorker
     let updateWordDbWorker: UpdateWordDbWorker
-    let translationService: TranslationService
-    let translationDecoder: TranslationDecoder
+    let dictionaryService: DictionaryService
     let logger: Logger
 
     func run(_ word: Word) -> AppEffectTask {
@@ -44,18 +43,11 @@ struct CreateWordEffect: WordEffect {
     }
 
     private func fetchAndDecodeTranslationData(_ word: Word) async throws -> Word {
-        logger.debug("Fetch translation from the remote API start, word = \(word)")
+        logger.debug("Fetch and decode translation from the remote API start, word = \(word)")
 
-        var updatedWord = try await translationService.fetchTranslationData(for: word)
+        let updatedWord = try await dictionaryService.fetchDictionaryEntry(for: word)
 
-        logger.debug("Fetch translation from the remote API success, word = \(updatedWord)")
-        logger.debug("Decode translation start, word: \(updatedWord)")
-
-        let translation = try await translationDecoder.decodeTranslation(for: updatedWord)
-
-        updatedWord.translation = translation
-
-        logger.debug("Decode translation success, word: \(updatedWord)")
+        logger.debug("Fetch and decode translation from the remote API success, word = \(updatedWord)")
 
         return updatedWord
     }

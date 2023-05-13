@@ -20,23 +20,28 @@ struct MainWordListView: View {
                 ZStack {
                     List {
                         ForEach(viewStore.wordList) { item in
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text(item.word.text)
-                                        .lineLimit(1)
-                                        .font(.system(size: 20, weight: .bold))
-                                        .foregroundColor(theme.textColor)
-                                    Text(item.word.translation)
-                                        .lineLimit(1)
-                                        .font(theme.normalFont)
-                                        .foregroundColor(theme.textColor)
-                                }
-                                Spacer()
-                                VStack(alignment: .trailing) {
-                                    Text(item.word.sourceLang.shortName)
-                                        .setLangShortNameStyle(theme)
-                                    Text(item.word.targetLang.shortName)
-                                        .setLangShortNameStyle(theme)
+                            ZStack {
+                                listRowFor(word: item.word)
+
+                                if !item.word.dictionaryEntry.isEmpty {
+                                    NavigationLink {
+                                        ZStack {
+                                            IfLetStore(
+                                                store.scope(
+                                                    state: \.wordDetails,
+                                                    action: MainWordList.Action.wordDetails
+                                                )
+                                            ) {
+                                                WordDetailsBuilder(store: $0).build()
+                                            }
+                                        }
+                                        .onAppear {
+                                            viewStore.send(.showWordDetails(item.word))
+                                        }
+                                    } label: {
+                                        EmptyView()
+                                    }
+                                    .opacity(0)
                                 }
                             }
                         }
@@ -77,6 +82,28 @@ struct MainWordListView: View {
             }
             .onAppear {
                 viewStore.send(.loadSavedMainWordList)
+            }
+        }
+    }
+
+    private func listRowFor(word: Word) -> some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text(word.text)
+                    .lineLimit(1)
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(theme.textColor)
+                Text(word.dictionaryEntry.first ?? "")
+                    .lineLimit(1)
+                    .font(theme.normalFont)
+                    .foregroundColor(theme.textColor)
+            }
+            Spacer()
+            VStack(alignment: .trailing) {
+                Text(word.sourceLang.shortName)
+                    .setLangShortNameStyle(theme)
+                Text(word.targetLang.shortName)
+                    .setLangShortNameStyle(theme)
             }
         }
     }
