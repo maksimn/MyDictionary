@@ -17,7 +17,7 @@ final class PonsTranslationDecoder: TranslationDecoder {
                 }
 
                 guard translationApiResponse.url.starts(with: "https://api.pons.com/v1") else {
-                    throw PonsTranslationDecoderError.ponsApiNotSupported
+                    throw PonsTranslationDecoderError.unsupportedTranslationApi
                 }
 
                 let ponsArray = try JSONDecoder().decode([PonsResponseData].self, from: translationApiResponse.data)
@@ -44,7 +44,7 @@ final class PonsTranslationDecoder: TranslationDecoder {
 
 enum PonsTranslationDecoderError: Error {
     case noTranslationData(Word)
-    case ponsApiNotSupported
+    case unsupportedTranslationApi
     case cannotCreateIndexRangeWhenParsing(Word)
 }
 
