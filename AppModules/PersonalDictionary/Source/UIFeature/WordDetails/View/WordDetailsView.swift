@@ -15,18 +15,11 @@ struct WordDetailsView: View {
 
     var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
-            VStack {
-                Text(viewStore.word.text)
-                if viewStore.word.dictionaryEntry.isEmpty {
-                    Text("No translations.")
-                } else {
-                    List(viewStore.word.dictionaryEntry, id: \.self) { translation in
-                        Text(translation)
-                    }
-                }
-                Spacer()
+            List(viewStore.word.dictionaryEntry, id: \.self) { translation in
+                Text(translation)
             }
             .background(theme.backgroundColor)
+            .navigationBarTitle(viewStore.word.text)
         }
     }
 }

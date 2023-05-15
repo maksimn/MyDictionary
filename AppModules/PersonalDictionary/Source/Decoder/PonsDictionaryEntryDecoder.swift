@@ -14,9 +14,10 @@ struct PonsDictionaryEntryDecoder: DictionaryEntryDecoder {
             do {
                 let ponsArray = try JSONDecoder().decode([PonsResponseData].self, from: data)
                 let ponsData = ponsArray.first ?? PonsResponseData(hits: [])
-                let roms = ponsData.hits.map { $0.roms }.flatMap { $0 }
-                let filteredRoms = roms.filter { $0.headword.lowercased() == word.text.lowercased() }
-                let translations = filteredRoms
+                let translations = ponsData.hits
+                    .map { $0.roms }
+                    .flatMap { $0 }
+                    .filter { $0.headword.lowercased() == word.text.lowercased() }
                     .flatMap { $0.arabs }
                     .flatMap { $0.translations }
                     .map { $0.target }
@@ -32,6 +33,7 @@ struct PonsDictionaryEntryDecoder: DictionaryEntryDecoder {
                         }
                     }
                     .filter { !$0.isEmpty }
+                    .removingDuplicates()
 
                 continuation.resume(returning: translations)
             } catch {
@@ -61,4 +63,18 @@ struct PonsResponseDataHitsRomsArab: Codable {
 
 struct PonsResponseDataHitsRomsArabsTranslation: Codable {
     let target: String
+}
+
+extension Array where Element: Hashable {
+    func removingDuplicates() -> [Element] {
+        var addedDict = [Element: Bool]()
+
+        return filter {
+            addedDict.updateValue(true, forKey: $0) == nil
+        }
+    }
+
+    mutating func removeDuplicates() {
+        self = self.removingDuplicates()
+    }
 }
