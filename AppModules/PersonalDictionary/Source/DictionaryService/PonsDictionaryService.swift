@@ -1,5 +1,5 @@
 //
-//  PonsTranslationService.swift
+//  PonsDictionaryService.swift
 //  PersonalDictionary
 //
 //  Created by Maxim Ivanov on 09.10.2021.
@@ -9,21 +9,23 @@ import Combine
 import CoreModule
 import Foundation
 
-final class PonsTranslationService: TranslationService {
+final class PonsDictionaryService: DictionaryService {
 
-    private let httpClient: HttpClient
     private let secret: String
+    private let httpClient: HttpClient
+    private let decoder: DictionaryEntryDecoder
 
     private let apiUrl = "https://api.pons.com/v1/dictionary"
 
     private var cancellables: Set<AnyCancellable> = []
 
-    init(secret: String, httpClient: HttpClient) {
+    init(secret: String, httpClient: HttpClient, decoder: DictionaryEntryDecoder) {
         self.secret = secret
         self.httpClient = httpClient
+        self.decoder = decoder
     }
 
-    func fetchTranslationData(for word: Word) async throws -> Word {
+    func fetchDictionaryEntry(for word: Word) async throws -> Word {
         let sourceLang = word.sourceLang.shortName.lowercased()
         let targetLang = word.targetLang.shortName.lowercased()
         var query = URLComponents()
@@ -39,7 +41,7 @@ final class PonsTranslationService: TranslationService {
             headers: ["X-Secret": secret]
         )
 
-        return try await withCheckedThrowingContinuation { continuation in
+        let data: Data = try await withCheckedThrowingContinuation { continuation in
             httpClient.send(http)
                 .sink(
                     receiveCompletion: { completion in
@@ -53,25 +55,24 @@ final class PonsTranslationService: TranslationService {
                     receiveValue: { httpResponse in
                         guard httpResponse.response.statusCode == 200 else {
                             return continuation.resume(
-                                throwing: PonsTranslationServiceError.translationNotFetched(word)
+                                throwing: PonsDictionaryServiceError.dictionaryDataNotFetched(word)
                             )
                         }
 
-                        var word = word
-
-                        word.translationApiResponse = TranslationApiResponse(
-                            url: http.urlString,
-                            data: httpResponse.data,
-                            httpResponseStatusCode: httpResponse.response.statusCode
-                        )
-
-                        continuation.resume(returning: word)
+                        continuation.resume(returning: httpResponse.data)
                     }
                 ).store(in: &self.cancellables)
         }
+
+        var word = word
+        let dictionaryEntry = try await decoder.decode(data)
+
+        word.dictionaryEntry = dictionaryEntry
+
+        return word
     }
 }
 
-enum PonsTranslationServiceError: Error {
-    case translationNotFetched(Word)
+enum PonsDictionaryServiceError: Error {
+    case dictionaryDataNotFetched(Word)
 }

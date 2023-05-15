@@ -22,11 +22,11 @@ private let app = App(
     createWordEffect: CreateWordEffect(
         createWordDbWorker: CreateWordDbWorkerImpl(realmFactory: realmFactory),
         updateWordDbWorker: UpdateWordDbWorkerImpl(realmFactory: realmFactory),
-        translationService: PonsTranslationService(
+        dictionaryService: PonsDictionaryService(
             secret: config.translationApiKey,
-            httpClient: LoggableHttpClient(logger: logger)
+            httpClient: LoggableHttpClient(logger: logger),
+            decoder: PonsDictionaryEntryDecoder()
         ),
-        translationDecoder: PonsTranslationDecoder(),
         logger: logger
     ),
     deleteWordEffect: DeleteWordEffect(
