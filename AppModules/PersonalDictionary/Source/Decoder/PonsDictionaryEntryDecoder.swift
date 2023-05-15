@@ -7,11 +7,36 @@
 
 import Foundation
 
-final class PonsDictionaryEntryDecoder: DictionaryEntryDecoder {
+struct PonsDictionaryEntryDecoder: DictionaryEntryDecoder {
 
-    func decode(_ data: Data) async throws -> DictionaryEntry {
+    func decode(_ data: Data, word: Word) async throws -> DictionaryEntry {
         return try await withCheckedThrowingContinuation { continuation in
-            continuation.resume(returning: [])
+            do {
+                let ponsArray = try JSONDecoder().decode([PonsResponseData].self, from: data)
+                let ponsData = ponsArray.first ?? PonsResponseData(hits: [])
+                let roms = ponsData.hits.map { $0.roms }.flatMap { $0 }
+                let filteredRoms = roms.filter { $0.headword.lowercased() == word.text.lowercased() }
+                let translations = filteredRoms
+                    .flatMap { $0.arabs }
+                    .flatMap { $0.translations }
+                    .map { $0.target }
+                    .map { str in
+                        if let endIndex = str.firstIndex(of: "<") {
+                            guard endIndex > str.startIndex && str.index(before: endIndex) > str.startIndex else {
+                                return ""
+                            }
+
+                            return String(str[..<str.index(before: endIndex)])
+                        } else {
+                            return str
+                        }
+                    }
+                    .filter { !$0.isEmpty }
+
+                continuation.resume(returning: translations)
+            } catch {
+                continuation.resume(throwing: error)
+            }
         }
     }
 }
@@ -26,6 +51,7 @@ struct PonsResponseDataHit: Codable {
 }
 
 struct PonsResponseDataHitsRom: Codable {
+    let headword: String
     let arabs: [PonsResponseDataHitsRomsArab]
 }
 

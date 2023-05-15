@@ -17,10 +17,16 @@ struct WordDetailsView: View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
             VStack {
                 Text(viewStore.word.text)
+                if viewStore.word.dictionaryEntry.isEmpty {
+                    Text("No translations.")
+                } else {
+                    List(viewStore.word.dictionaryEntry, id: \.self) { translation in
+                        Text(translation)
+                    }
+                }
+                Spacer()
             }
-            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
             .background(theme.backgroundColor)
-            .edgesIgnoringSafeArea(.all)
         }
     }
 }

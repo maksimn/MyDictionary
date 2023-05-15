@@ -8,9 +8,7 @@
 import CoreModule
 import Foundation
 
-typealias DictionaryEntry = [DictionaryEntryItem]
-
-struct DictionaryEntryItem: Equatable { }
+typealias DictionaryEntry = [String]
 
 struct Word: Equatable, CustomStringConvertible {
 
