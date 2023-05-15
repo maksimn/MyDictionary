@@ -5,7 +5,7 @@
 //  Created by Maxim Ivanov on 09.10.2021.
 //
 
-protocol TranslationService {
+protocol DictionaryService {
 
-    func fetchTranslationData(for word: Word) async throws -> Word
+    func fetchDictionaryEntry(for word: Word) async throws -> Word
 }

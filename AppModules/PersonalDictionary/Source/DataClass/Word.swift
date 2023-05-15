@@ -8,6 +8,10 @@
 import CoreModule
 import Foundation
 
+typealias DictionaryEntry = [DictionaryEntryItem]
+
+struct DictionaryEntryItem: Equatable { }
+
 struct Word: Equatable, CustomStringConvertible {
 
     typealias Id = Tagged<Word, String>
@@ -16,13 +20,7 @@ struct Word: Equatable, CustomStringConvertible {
 
     let text: String
 
-    var translation: String {
-        didSet {
-            onUpdate()
-        }
-    }
-
-    var translationApiResponse: TranslationApiResponse? {
+    var dictionaryEntry: DictionaryEntry = [] {
         didSet {
             onUpdate()
         }
@@ -45,8 +43,6 @@ struct Word: Equatable, CustomStringConvertible {
     init(
         id: Id = Id(raw: UUID().uuidString),
         text: String,
-        translation: String = "",
-        translationApiResponse: TranslationApiResponse? = nil,
         sourceLang: Lang,
         targetLang: Lang,
         isFavorite: Bool = false,
@@ -55,8 +51,6 @@ struct Word: Equatable, CustomStringConvertible {
     ) {
         self.id = id
         self.text = text
-        self.translation = translation
-        self.translationApiResponse = translationApiResponse
         self.sourceLang = sourceLang
         self.targetLang = targetLang
         self.isFavorite = isFavorite
@@ -68,8 +62,6 @@ struct Word: Equatable, CustomStringConvertible {
         """
         Word(id: \(id.raw), \
         text: \(text), \
-        translation: \(translation), \
-        translationApiResponse: \(translationApiResponse != nil ? "TranslationApiResponse(...)" : "nil"), \
         sourceLang: \(sourceLang.id.raw), \
         targetLang: \(targetLang.id.raw), \
         isFavorite: \(isFavorite), \
@@ -81,13 +73,4 @@ struct Word: Equatable, CustomStringConvertible {
     private mutating func onUpdate() {
         updatedAt = Date().integer
     }
-}
-
-struct TranslationApiResponse: Equatable {
-
-    let url: String
-
-    let data: Data
-
-    let httpResponseStatusCode: Int
 }

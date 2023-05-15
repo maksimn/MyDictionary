@@ -23,7 +23,7 @@ struct MainWordListView: View {
                             ZStack {
                                 listRowFor(word: item.word)
 
-                                if item.word.translationApiResponse != nil {
+                                if !item.word.dictionaryEntry.isEmpty {
                                     NavigationLink {
                                         ZStack {
                                             IfLetStore(
@@ -93,7 +93,7 @@ struct MainWordListView: View {
                     .lineLimit(1)
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(theme.textColor)
-                Text(word.translation)
+                Text("translation")
                     .lineLimit(1)
                     .font(theme.normalFont)
                     .foregroundColor(theme.textColor)
