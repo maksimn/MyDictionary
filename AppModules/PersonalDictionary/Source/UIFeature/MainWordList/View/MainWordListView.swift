@@ -39,9 +39,9 @@ struct MainWordListView: View {
                                             viewStore.send(.showWordDetails(item.word))
                                         }
                                     } label: {
-                                        Rectangle().opacity(0.0)
+                                        EmptyView()
                                     }
-                                    .buttonStyle(.plain)
+                                    .opacity(0)
                                 }
                             }
                         }
@@ -93,7 +93,7 @@ struct MainWordListView: View {
                     .lineLimit(1)
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(theme.textColor)
-                Text("translation")
+                Text(word.dictionaryEntry.first ?? "")
                     .lineLimit(1)
                     .font(theme.normalFont)
                     .foregroundColor(theme.textColor)

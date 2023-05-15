@@ -65,7 +65,7 @@ final class PonsDictionaryService: DictionaryService {
         }
 
         var word = word
-        let dictionaryEntry = try await decoder.decode(data)
+        let dictionaryEntry = try await decoder.decode(data, word: word)
 
         word.dictionaryEntry = dictionaryEntry
 
