@@ -38,16 +38,16 @@ private let store = Store(
     initialState: .init(),
     reducer: app._printChanges()
 )
-private let mainWordListBuilder = MainWordListBuilder(
-    config: config,
-    store: store.scope(state: \.mainWordList, action: App.Action.mainWordList)
-)
 
 public struct AppView: View {
 
     public init() { }
 
     public var body: some View {
-        mainWordListBuilder.build()
+        MainWordListView(
+            config: config,
+            store: store.scope(state: \.mainWordList, action: App.Action.mainWordList),
+            theme: Theme.data
+        )
     }
 }
