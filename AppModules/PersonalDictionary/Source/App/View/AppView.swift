@@ -14,12 +14,9 @@ private let logger = LoggerImpl(category: "App")
 private let realmFactory = RealmFactoryImpl(logger: logger)
 
 private let app = App(
-    langRepository: LangRepositoryImpl(userDefaults: UserDefaults.standard, data: config.langData),
-    loadSavedMainWordListEffect: LoadSavedMainWordListEffect(
-        wordListFetcher: WordListFetcherImpl(realmFactory: realmFactory),
-        logger: logger
-    ),
-    createWordEffect: CreateWordEffect(
+    config: config,
+    wordListFetcher: WordListFetcherImpl(realmFactory: realmFactory),
+    createWordEffect: CreateWordEffectImpl(
         createWordDbWorker: CreateWordDbWorkerImpl(realmFactory: realmFactory),
         updateWordDbWorker: UpdateWordDbWorkerImpl(realmFactory: realmFactory),
         dictionaryService: PonsDictionaryService(
@@ -29,9 +26,7 @@ private let app = App(
         ),
         logger: logger
     ),
-    deleteWordEffect: DeleteWordEffect(
-        dbWorker: DeleteWordDbWorkerImpl(realmFactory: realmFactory), logger: logger
-    )
+    deleteWordDbWorker: DeleteWordDbWorkerImpl(realmFactory: realmFactory)
 )
 
 private let store = Store(

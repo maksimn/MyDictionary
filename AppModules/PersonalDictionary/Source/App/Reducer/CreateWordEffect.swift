@@ -5,32 +5,34 @@
 //  Created by Maksim Ivanov on 05.05.2023.
 //
 
-import ComposableArchitecture
 import CoreModule
 
-struct CreateWordEffect: WordEffect {
+protocol CreateWordEffect {
+
+    func run(_ word: Word) async throws -> Word
+}
+
+struct CreateWordEffectImpl: CreateWordEffect {
 
     let createWordDbWorker: CreateWordDbWorker
     let updateWordDbWorker: UpdateWordDbWorker
     let dictionaryService: DictionaryService
     let logger: Logger
 
-    func run(_ word: Word) -> AppEffectTask {
-        .run { send in
-            do {
-                logger.debug("Create word effect start: \(word)")
+    func run(_ word: Word) async throws -> Word {
+        do {
+            logger.debug("Create word effect start: \(word)")
 
-                try await dbCreateWord(word)
-                let updatedWord = try await fetchAndDecodeTranslationData(word)
-                try await dbUpdateWord(updatedWord)
+            try await dbCreateWord(word)
+            let updatedWord = try await fetchAndDecodeTranslationData(word)
+            try await dbUpdateWord(updatedWord)
 
-                logger.debug("Create word effect success: \(updatedWord)")
+            logger.debug("Create word effect success: \(updatedWord)")
 
-                await send(.mainWordList(.wordUpdated(updatedWord)))
-            } catch {
-                logger.log("Create word effect error: \(word)", level: .error)
-                logger.errorWithContext(error)
-            }
+            return updatedWord
+        } catch {
+            logger.log("Create word effect error: \(word)", level: .error)
+            throw error
         }
     }
 

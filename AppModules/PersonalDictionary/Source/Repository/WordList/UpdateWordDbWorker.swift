@@ -5,8 +5,6 @@
 //  Created by Maxim Ivanov on 11.05.2023.
 //
 
-import RealmSwift
-
 protocol UpdateWordDbWorker {
 
     func update(word: Word) async throws
