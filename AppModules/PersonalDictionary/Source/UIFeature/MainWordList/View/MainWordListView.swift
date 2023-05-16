@@ -32,7 +32,10 @@ struct MainWordListView: View {
                                                     action: MainWordList.Action.wordDetails
                                                 )
                                             ) {
-                                                WordDetailsBuilder(store: $0).build()
+                                                WordDetailsView(
+                                                    store: $0,
+                                                    theme: Theme.data
+                                                )
                                             }
                                         }
                                         .onAppear {
@@ -58,7 +61,14 @@ struct MainWordListView: View {
                         NavigationLink {
                             ZStack {
                                 IfLetStore(store.scope(state: \.newWord, action: MainWordList.Action.newWord)) {
-                                    NewWordBuilder(config: config, store: $0).build()
+                                    NewWordView(
+                                        store: $0,
+                                        langPickerView: LangPickerView(
+                                            allLangs: config.langData.allLangs,
+                                            store: $0.scope(state: \.langPicker, action: NewWord.Action.langPicker)
+                                        ),
+                                        theme: Theme.data
+                                    )
                                 }
                             }
                             .onAppear {

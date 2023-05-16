@@ -6,13 +6,12 @@
 //
 
 import ComposableArchitecture
-import CoreModule
 import SwiftUI
 
-struct NewWordView<Builder>: View where Builder: SwiftViewBuilder {
+struct NewWordView<LangPickerViewType>: View where LangPickerViewType: View {
 
     let store: StoreOf<NewWord>
-    let langPickerBuilder: Builder
+    let langPickerView: LangPickerViewType
     let theme: Theme
 
     @Environment(\.presentationMode)
@@ -65,7 +64,7 @@ struct NewWordView<Builder>: View where Builder: SwiftViewBuilder {
                             }
                             .padding(.init(top: 10, leading: 0, bottom: 12, trailing: 0))
                         } else {
-                            langPickerBuilder.build()
+                            langPickerView
                         }
                     }
                     .background(Theme.data.backgroundColor)
@@ -91,11 +90,5 @@ struct NewWordView<Builder>: View where Builder: SwiftViewBuilder {
 
         viewStore.send(.sendNewWord(newWord))
         self.presentationMode.wrappedValue.dismiss()
-    }
-}
-
-struct NewWordView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {}
     }
 }
