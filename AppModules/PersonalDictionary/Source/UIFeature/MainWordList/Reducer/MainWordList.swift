@@ -18,18 +18,15 @@ struct MainWordList: ReducerProtocol {
     struct State: Equatable {
         var wordList: IdentifiedArrayOf<IdentifiedWord> = []
         var newWord: NewWord.State?
-        var wordDetails: WordDetails.State?
     }
 
     enum Action {
         case loadSavedMainWordList
         case savedWordListLoaded([Word])
         case showNewWordView
-        case showWordDetails(Word)
         case wordUpdated(Word)
         case delete(Word)
         case newWord(NewWord.Action)
-        case wordDetails(WordDetails.Action)
     }
 
     var body: some ReducerProtocol<State, Action> {
@@ -38,9 +35,6 @@ struct MainWordList: ReducerProtocol {
         }
         .ifLet(\.newWord, action: /Action.newWord) {
             NewWord(langRepository: langRepository)
-        }
-        .ifLet(\.wordDetails, action: /Action.wordDetails) {
-            WordDetails()
         }
     }
 
@@ -53,9 +47,6 @@ struct MainWordList: ReducerProtocol {
 
         case .showNewWordView:
             state.newWord = newWordInitialState()
-
-        case .showWordDetails(let word):
-            state.wordDetails = .init(word: word)
 
         case .newWord(.sendNewWord(let word)):
             guard let word = word else { break }

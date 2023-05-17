@@ -21,31 +21,8 @@ struct MainWordListView: View {
                     List {
                         ForEach(viewStore.wordList) { item in
                             ZStack {
-                                listRowFor(word: item.word)
-
-                                if !item.word.dictionaryEntry.isEmpty {
-                                    NavigationLink {
-                                        ZStack {
-                                            IfLetStore(
-                                                store.scope(
-                                                    state: \.wordDetails,
-                                                    action: MainWordList.Action.wordDetails
-                                                )
-                                            ) {
-                                                WordDetailsView(
-                                                    store: $0,
-                                                    theme: Theme.data
-                                                )
-                                            }
-                                        }
-                                        .onAppear {
-                                            viewStore.send(.showWordDetails(item.word))
-                                        }
-                                    } label: {
-                                        EmptyView()
-                                    }
-                                    .opacity(0)
-                                }
+                                WordView(word: item.word, theme: theme)
+                                LinkToWordDetails(word: item.word, theme: theme)
                             }
                         }
                         .onDelete { indexSet in
@@ -58,28 +35,7 @@ struct MainWordListView: View {
                     }
                     VStack {
                         Spacer()
-                        NavigationLink {
-                            ZStack {
-                                IfLetStore(store.scope(state: \.newWord, action: MainWordList.Action.newWord)) {
-                                    NewWordView(
-                                        store: $0,
-                                        langPickerView: LangPickerView(
-                                            allLangs: config.langData.allLangs,
-                                            store: $0.scope(state: \.langPicker, action: NewWord.Action.langPicker)
-                                        ),
-                                        theme: Theme.data
-                                    )
-                                }
-                            }
-                            .onAppear {
-                                viewStore.send(.showNewWordView)
-                            }
-                        } label: {
-                            Image("icon-plus", bundle: Bundle.module)
-                                .resizable()
-                                .frame(width: 44, height: 44)
-                                .padding(.bottom, 24)
-                        }
+                        LinkToNewWord(config: config, store: store)
                     }
                 }
                 .background(theme.backgroundColor)
@@ -94,36 +50,5 @@ struct MainWordListView: View {
                 viewStore.send(.loadSavedMainWordList)
             }
         }
-    }
-
-    private func listRowFor(word: Word) -> some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text(word.text)
-                    .lineLimit(1)
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(theme.textColor)
-                Text(word.dictionaryEntry.first ?? "")
-                    .lineLimit(1)
-                    .font(theme.normalFont)
-                    .foregroundColor(theme.textColor)
-            }
-            Spacer()
-            VStack(alignment: .trailing) {
-                Text(word.sourceLang.shortName)
-                    .setLangShortNameStyle(theme)
-                Text(word.targetLang.shortName)
-                    .setLangShortNameStyle(theme)
-            }
-        }
-    }
-}
-
-extension Text {
-
-    func setLangShortNameStyle(_ theme: Theme) -> some View {
-        lineLimit(1)
-            .font(.system(size: 12, weight: .bold))
-            .foregroundColor(theme.secondaryTextColor)
     }
 }
