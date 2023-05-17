@@ -41,14 +41,10 @@ struct App: ReducerProtocol {
             return reduceInto(&state, mainWordList: action)
 
         case .loadSavedMainWordListResult(.success(let wordList)):
-            return .run { send in
-                await send(.mainWordList(.savedWordListLoaded(wordList)))
-            }
+            return .send(.mainWordList(.savedWordListLoaded(wordList)))
 
         case .createWordResult(.success(let word)):
-            return .run { send in
-                await send(.mainWordList(.wordUpdated(word)))
-            }
+            return .send(.mainWordList(.wordUpdated(word)))
 
         default:
             break

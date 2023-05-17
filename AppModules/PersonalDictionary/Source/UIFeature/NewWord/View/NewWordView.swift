@@ -8,10 +8,10 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct NewWordView<LangPickerViewType>: View where LangPickerViewType: View {
+struct NewWordView<ViewType>: View where ViewType: View {
 
     let store: StoreOf<NewWord>
-    let langPickerView: LangPickerViewType
+    let langPickerView: ViewType
     let theme: Theme
 
     @Environment(\.presentationMode)

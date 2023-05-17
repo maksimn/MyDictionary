@@ -37,11 +37,19 @@ final class PonsDictionaryService: DictionaryService {
 
         let http = Http(
             urlString: apiUrl + (query.string ?? ""),
-            method: "GET",
             headers: ["X-Secret": secret]
         )
 
-        let data: Data = try await withCheckedThrowingContinuation { continuation in
+        let data = try await fetchData(http)
+        var word = word
+
+        word.dictionaryEntry = try await decoder.decode(data, word: word)
+
+        return word
+    }
+
+    private func fetchData(_ http: Http) async throws -> Data {
+        try await withCheckedThrowingContinuation { continuation in
             httpClient.send(http)
                 .sink(
                     receiveCompletion: { completion in
@@ -55,7 +63,7 @@ final class PonsDictionaryService: DictionaryService {
                     receiveValue: { httpResponse in
                         guard httpResponse.response.statusCode == 200 else {
                             return continuation.resume(
-                                throwing: PonsDictionaryServiceError.dictionaryDataNotFetched(word)
+                                throwing: PonsDictionaryServiceError.dictionaryDataNotFetched(http)
                             )
                         }
 
@@ -63,16 +71,9 @@ final class PonsDictionaryService: DictionaryService {
                     }
                 ).store(in: &self.cancellables)
         }
-
-        var word = word
-        let dictionaryEntry = try await decoder.decode(data, word: word)
-
-        word.dictionaryEntry = dictionaryEntry
-
-        return word
     }
 }
 
 enum PonsDictionaryServiceError: Error {
-    case dictionaryDataNotFetched(Word)
+    case dictionaryDataNotFetched(Http)
 }
