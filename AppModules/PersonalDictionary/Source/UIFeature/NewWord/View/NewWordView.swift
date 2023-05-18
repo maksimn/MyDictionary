@@ -71,6 +71,9 @@ struct NewWordView<ViewType>: View where ViewType: View {
                     .cornerRadius(16)
                 }
                 .padding(.init(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .onAppear {
+                    viewStore.send(.setInitialState)
+                }
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
             .background(Color(white: 0, opacity: 0.7))

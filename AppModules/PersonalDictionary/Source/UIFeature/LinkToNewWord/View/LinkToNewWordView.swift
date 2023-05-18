@@ -8,15 +8,15 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct LinkToNewWord: View {
+struct LinkToNewWordView: View {
 
     let config: Config
-    let store: StoreOf<MainWordList>
+    let store: StoreOf<LinkToNewWord>
 
     var body: some View {
         NavigationLink {
             ZStack {
-                IfLetStore(store.scope(state: \.newWord, action: MainWordList.Action.newWord)) {
+                IfLetStore(store.scope(state: \.newWord, action: LinkToNewWord.Action.newWord)) {
                     NewWordView(
                         store: $0,
                         langPickerView: LangPickerView(
@@ -28,7 +28,7 @@ struct LinkToNewWord: View {
                 }
             }
             .onAppear {
-                ViewStore(store).send(.showNewWordView)
+                ViewStore(store.stateless).send(.navigateToNewWord)
             }
         } label: {
             Image("icon-plus", bundle: Bundle.module)

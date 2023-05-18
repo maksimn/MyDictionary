@@ -6,87 +6,64 @@
 //
 
 import ComposableArchitecture
+import CoreModule
 
 struct MainWordList: ReducerProtocol {
 
-    private let langRepository: LangRepository
-
-    init(langRepository: LangRepository) {
-        self.langRepository = langRepository
-    }
+    let wordListFetcher: WordListFetcher
+    let createWordEffect: CreateWordEffect
 
     struct State: Equatable {
-        var wordList: IdentifiedArrayOf<IdentifiedWord> = []
-        var newWord: NewWord.State?
+        var wordList = WordList.State()
     }
 
     enum Action {
         case loadSavedMainWordList
-        case savedWordListLoaded([Word])
-        case showNewWordView
-        case wordUpdated(Word)
-        case delete(Word)
-        case newWord(NewWord.Action)
+        case loadSavedMainWordListResult(TaskResult<[Word]>)
+        case createWord(Word)
+        case createWordResult(TaskResult<Word>)
+        case wordList(WordList.Action)
     }
 
-    var body: some ReducerProtocol<State, Action> {
+    var body: some ReducerProtocolOf<MainWordList> {
         Reduce { state, action in
             reduceInto(&state, action: action)
         }
-        .ifLet(\.newWord, action: /Action.newWord) {
-            NewWord(langRepository: langRepository)
+        Scope(state: \.wordList, action: /Action.wordList) {
+            WordList(
+                deleteWordDbWorker: DeleteWordDbWorkerImpl(
+                    realmFactory: RealmFactoryImpl(logger: LoggerImpl(category: "WordList"))
+                )
+            )
         }
     }
 
     private func reduceInto(_ state: inout State, action: Action) -> EffectTask<Action> {
         switch action {
-        case .savedWordListLoaded(let wordList):
-            state.wordList = IdentifiedArrayOf(
+        case .loadSavedMainWordList:
+            return .run { send in
+                await send(.loadSavedMainWordListResult(TaskResult { try wordListFetcher.wordList() }))
+            }
+
+        case .loadSavedMainWordListResult(.success(let wordList)):
+            state.wordList.wordList = IdentifiedArrayOf(
                 uniqueElements: wordList.map { IdentifiedWord(word: $0) }
             )
 
-        case .showNewWordView:
-            state.newWord = newWordInitialState()
+        case .createWord(let word):
+            state.wordList.wordList.insert(IdentifiedWord(word: word), at: 0)
 
-        case .newWord(.sendNewWord(let word)):
-            guard let word = word else { break }
+            return .run { send in
+                await send(.createWordResult(TaskResult { try await createWordEffect.run(word) }))
+            }
 
-            state.wordList.insert(IdentifiedWord(word: word), at: 0)
-
-        case .wordUpdated(let word):
-            guard let position = state.wordList.firstIndex(where: { $0.word.id == word.id }) else { break }
-
-            state.wordList[position] = IdentifiedWord(word: word)
-
-        case .delete(let word):
-            guard let position = state.wordList.firstIndex(where: { $0.word.id == word.id }) else { break }
-
-            state.wordList.remove(at: position)
+        case .createWordResult(.success(let word)):
+            return .send(.wordList(.wordUpdated(word)))
 
         default:
             break
         }
 
         return .none
-    }
-
-    private func newWordInitialState() -> NewWord.State {
-        .init(
-            text: "",
-            sourceLang: langRepository.sourceLang(),
-            targetLang: langRepository.targetLang(),
-            langPicker: .init(
-                lang: langRepository.sourceLang(),
-                langType: .source,
-                isHidden: true
-            )
-        )
-    }
-}
-
-struct IdentifiedWord: Equatable, Identifiable {
-    var word: Word
-    var id: String {
-        word.id.raw
     }
 }

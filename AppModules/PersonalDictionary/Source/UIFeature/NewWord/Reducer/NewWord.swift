@@ -7,6 +7,9 @@
 
 import ComposableArchitecture
 
+private let empty = Lang(id: .init(raw: -1), name: "", shortName: "")
+private let emptyPicker = LangPicker.State(lang: empty, langType: .source, isHidden: true)
+
 struct NewWord: ReducerProtocol {
 
     private let langRepository: LangRepository
@@ -16,13 +19,14 @@ struct NewWord: ReducerProtocol {
     }
 
     struct State: Equatable {
-        var text: String
-        var sourceLang: Lang
-        var targetLang: Lang
-        var langPicker: LangPicker.State
+        var text = ""
+        var sourceLang = empty
+        var targetLang = empty
+        var langPicker = emptyPicker
     }
 
     enum Action {
+        case setInitialState
         case textChanged(String)
         case sendNewWord(Word?)
         case langPicker(LangPicker.Action)
@@ -39,6 +43,18 @@ struct NewWord: ReducerProtocol {
 
     private func reduceInto(state: inout State, action: Action) -> EffectTask<Action> {
         switch action {
+        case .setInitialState:
+            state = .init(
+                text: "",
+                sourceLang: langRepository.sourceLang(),
+                targetLang: langRepository.targetLang(),
+                langPicker: .init(
+                    lang: langRepository.sourceLang(),
+                    langType: .source,
+                    isHidden: true
+                )
+            )
+
         case .textChanged(let text):
             state.text = text
 
