@@ -15,11 +15,11 @@ struct MainWordListView: View {
     let theme: Theme
 
     var body: some View {
-        WithViewStore(self.store) { viewStore in
+        WithViewStore(self.store, observe: \.wordList) { viewStore in
             NavigationStack {
                 ZStack {
                     List {
-                        ForEach(viewStore.wordList) { item in
+                        ForEach(viewStore.state) { item in
                             ZStack {
                                 WordView(word: item.word, theme: theme)
                                 LinkToWordDetails(word: item.word, theme: theme)
@@ -27,7 +27,7 @@ struct MainWordListView: View {
                         }
                         .onDelete { indexSet in
                             for index in indexSet {
-                                let item = viewStore.wordList[index]
+                                let item = viewStore.state[index]
 
                                 viewStore.send(.delete(item.word))
                             }
