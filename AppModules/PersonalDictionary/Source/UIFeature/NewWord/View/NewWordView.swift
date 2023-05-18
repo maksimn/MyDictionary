@@ -14,6 +14,13 @@ struct NewWordView<ViewType>: View where ViewType: View {
     let langPickerView: ViewType
     let theme: Theme
 
+    init(store: StoreOf<NewWord>, langPickerView: ViewType, theme: Theme) {
+        self.store = store
+        self.langPickerView = langPickerView
+        self.theme = theme
+        ViewStore(store.stateless).send(.setInitialState)
+    }
+
     @Environment(\.presentationMode)
     var presentationMode: Binding<PresentationMode>
 
