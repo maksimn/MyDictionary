@@ -12,11 +12,7 @@ private let emptyPicker = LangPicker.State(lang: empty, langType: .source, isHid
 
 struct NewWord: ReducerProtocol {
 
-    private let langRepository: LangRepository
-
-    init(langRepository: LangRepository) {
-        self.langRepository = langRepository
-    }
+    let langRepository: LangRepository
 
     struct State: Equatable {
         var text = ""

@@ -11,18 +11,16 @@ import SwiftUI
 struct WordListView: View {
 
     let store: StoreOf<WordList>
-    let theme: Theme
 
     var body: some View {
         WithViewStore(self.store, observe: \.wordList) { viewStore in
             List {
                 ForEach(viewStore.state) { word in
                     ZStack {
-                        WordView(word: word, theme: theme)
+                        WordView(word: word, theme: Theme.data)
                         LinkToWordDetails(
                             wordId: word._id,
-                            isActive: !word.translation.isEmpty,
-                            theme: theme
+                            isActive: !word.translation.isEmpty
                         )
                     }
                 }

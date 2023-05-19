@@ -11,7 +11,7 @@ import SwiftUI
 struct MainScreenView: View {
 
     let title: String
-    let config: Config
+    let allLangs: [Lang]
     let store: StoreOf<MainScreen>
     let theme: Theme
 
@@ -19,13 +19,12 @@ struct MainScreenView: View {
         NavigationStack {
             ZStack {
                 MainWordListView(
-                    store: store.scope(state: \.mainWordList, action: MainScreen.Action.mainWordList),
-                    theme: theme
+                    store: store.scope(state: \.mainWordList, action: MainScreen.Action.mainWordList)
                 )
                 VStack {
                     Spacer()
                     LinkToNewWordView(
-                        config: config,
+                        allLangs: allLangs,
                         store: store.scope(state: \.linkToNewWord, action: MainScreen.Action.linkToNewWord)
                     )
                 }

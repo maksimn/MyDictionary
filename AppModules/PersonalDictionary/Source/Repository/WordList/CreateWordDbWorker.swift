@@ -13,7 +13,7 @@ protocol CreateWordDbWorker {
 struct CreateWordDbWorkerImpl: CreateWordDbWorker {
 
     func create(word: Word) async throws {
-        try await make(operation: { (realm, word) in
+        try await makeRealmCUD(operation: { (realm, word) in
             realm.add(WordDAO(word))
         }, with: word)
     }

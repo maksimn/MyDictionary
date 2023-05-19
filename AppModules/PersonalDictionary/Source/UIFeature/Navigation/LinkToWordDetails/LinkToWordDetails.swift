@@ -13,7 +13,6 @@ struct LinkToWordDetails: View {
 
     let wordId: Word.Id
     var isActive: Bool
-    let theme: Theme
 
     var body: some View {
         if isActive {

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct LinkToNewWordView: View {
 
-    let config: Config
+    let allLangs: [Lang]
     let store: StoreOf<LinkToNewWord>
 
     var body: some View {
@@ -20,7 +20,7 @@ struct LinkToNewWordView: View {
                     NewWordView(
                         store: $0,
                         langPickerView: LangPickerView(
-                            allLangs: config.langData.allLangs,
+                            allLangs: allLangs,
                             store: $0.scope(state: \.langPicker, action: NewWord.Action.langPicker)
                         ),
                         theme: Theme.data

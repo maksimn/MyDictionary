@@ -7,8 +7,6 @@
 
 protocol LangRepository {
 
-    func allLangs() -> [Lang]
-
     func sourceLang() -> Lang
 
     func set(sourceLang: Lang)

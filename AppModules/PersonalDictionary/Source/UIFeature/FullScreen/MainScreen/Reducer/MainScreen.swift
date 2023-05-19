@@ -27,40 +27,20 @@ struct MainScreen: ReducerProtocol {
             reduceInto(&state, action: action)
         }
         Scope(state: \.mainWordList, action: /Action.mainWordList) {
-            MainWordList(
-                wordListFetcher: WordListFetcherImpl(),
-                createWordEffect: CreateWordEffectImpl(
-                    createWordDbWorker: CreateWordDbWorkerImpl(),
-                    updateWordDbWorker: UpdateWordDbWorkerImpl(),
-                    dictionaryService: PonsDictionaryService(
-                        secret: config.translationApiKey,
-                        httpClient: LoggableHttpClient(logger: logger()),
-                        decoder: PonsDictionaryEntryDecoder()
-                    ),
-                    logger: logger()
-                )
-            )
+            MainWordList(translationApiKey: config.translationApiKey)
         }
         Scope(state: \.linkToNewWord, action: /Action.linkToNewWord) {
-            LinkToNewWord(config: config)
+            LinkToNewWord(langData: config.langData)
         }
     }
 
     private func reduceInto(_ state: inout State, action: Action) -> EffectTask<Action> {
-        switch action {
-        case .linkToNewWord(.newWord(.sendNewWord(let word))):
-            guard let word = word else { break }
+        if case .linkToNewWord(.newWord(.sendNewWord(let word))) = action {
+            guard let word = word else { return .none }
 
             return .send(.mainWordList(.createWord(word)))
-
-        default:
-            break
         }
 
         return .none
-    }
-
-    private func logger() -> Logger {
-        LoggerImpl(category: "MainWordList")
     }
 }
