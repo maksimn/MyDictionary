@@ -18,34 +18,23 @@ struct Word: Equatable, CustomStringConvertible {
 
     let text: String
 
-    var dictionaryEntry: DictionaryEntry = [] {
-        didSet {
-            onUpdate()
-        }
-    }
+    var dictionaryEntry: DictionaryEntry = [] 
 
     let sourceLang: Lang
 
     let targetLang: Lang
 
-    var isFavorite: Bool {
-        didSet {
-            onUpdate()
-        }
-    }
+    var isFavorite: Bool
 
     let createdAt: Int
 
-    var updatedAt: Int
-
     init(
         id: Id = Id(raw: UUID().uuidString),
-        text: String,
-        sourceLang: Lang,
-        targetLang: Lang,
+        text: String = "",
+        sourceLang: Lang = .init(id: .init(raw: -1), name: "", shortName: ""),
+        targetLang: Lang = .init(id: .init(raw: -1), name: "", shortName: ""),
         isFavorite: Bool = false,
-        createdAt: Int = Date().integer,
-        updatedAt: Int = Date().integer
+        createdAt: Int = Date().integer
     ) {
         self.id = id
         self.text = text
@@ -53,7 +42,6 @@ struct Word: Equatable, CustomStringConvertible {
         self.targetLang = targetLang
         self.isFavorite = isFavorite
         self.createdAt = createdAt
-        self.updatedAt = updatedAt
     }
 
     var description: String {
@@ -63,12 +51,7 @@ struct Word: Equatable, CustomStringConvertible {
         sourceLang: \(sourceLang.id.raw), \
         targetLang: \(targetLang.id.raw), \
         isFavorite: \(isFavorite), \
-        createdAt: \(createdAt), \
-        updatedAt: \(updatedAt))
+        createdAt: \(createdAt))
         """
-    }
-
-    private mutating func onUpdate() {
-        updatedAt = Date().integer
     }
 }

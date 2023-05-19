@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WordView: View {
 
-    let word: Word
+    let word: WordVO
     let theme: Theme
 
     var body: some View {
@@ -19,16 +19,16 @@ struct WordView: View {
                     .lineLimit(1)
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(theme.textColor)
-                Text(word.dictionaryEntry.first ?? "")
+                Text(word.translation)
                     .lineLimit(1)
                     .font(theme.normalFont)
                     .foregroundColor(theme.textColor)
             }
             Spacer()
             VStack(alignment: .trailing) {
-                Text(word.sourceLang.shortName)
+                Text(word.sourceLang)
                     .setLangShortNameStyle(theme)
-                Text(word.targetLang.shortName)
+                Text(word.targetLang)
                     .setLangShortNameStyle(theme)
             }
         }
