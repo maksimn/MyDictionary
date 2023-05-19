@@ -7,7 +7,7 @@
 
 import RealmSwift
 
-func make(operation: (Realm, Word) throws -> Void, with word: Word) async throws {
+func makeRealmCUD(operation: (Realm, Word) throws -> Void, with word: Word) async throws {
     return try await withCheckedThrowingContinuation { continuation in
         do {
             let realm = try Realm()
@@ -23,6 +23,17 @@ func make(operation: (Realm, Word) throws -> Void, with word: Word) async throws
         } catch {
             continuation.resume(throwing: error)
         }
+    }
+}
+
+extension Realm {
+
+    func findWordBy(id: Word.Id) throws -> WordDAO {
+        guard let wordDAO = object(ofType: WordDAO.self, forPrimaryKey: id.raw) else {
+            throw RealmWordError.wordNotFoundInRealm(id)
+        }
+
+        return wordDAO
     }
 }
 

@@ -6,7 +6,6 @@
 //
 
 import ComposableArchitecture
-import CoreModule
 
 struct MainWordList: ReducerProtocol {
 

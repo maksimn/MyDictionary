@@ -22,7 +22,7 @@ public struct AppView: View {
     public var body: some View {
         MainScreenView(
             title: "My dictionary",
-            config: config,
+            allLangs: config.langData.allLangs,
             store: store,
             theme: Theme.data
         )

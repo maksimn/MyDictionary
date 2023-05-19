@@ -18,10 +18,6 @@ final class LangRepositoryImpl: LangRepository {
         self.data = data
     }
 
-    func allLangs() -> [Lang] {
-        data.allLangs
-    }
-
     func sourceLang() -> Lang {
         findLang(with: data.sourceLangKey) ?? data.defaultSourceLang
     }

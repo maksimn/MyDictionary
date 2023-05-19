@@ -13,10 +13,8 @@ protocol UpdateWordDbWorker {
 struct UpdateWordDbWorkerImpl: UpdateWordDbWorker {
 
     func update(word: Word) async throws {
-        try await make(operation: { (realm, word) in
-            guard let wordDAO = realm.object(ofType: WordDAO.self, forPrimaryKey: word.id.raw) else {
-                throw RealmWordError.wordNotFoundInRealm(word.id)
-            }
+        try await makeRealmCUD(operation: { (realm, word) in
+            let wordDAO = try realm.findWordBy(id: word.id)
 
             wordDAO.update(from: word)
         }, with: word)

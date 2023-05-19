@@ -13,10 +13,8 @@ protocol DeleteWordDbWorker {
 struct DeleteWordDbWorkerImpl: DeleteWordDbWorker {
 
     func delete(wordId: Word.Id) async throws -> Word.Id {
-        try await make(operation: { (realm, word) in
-            guard let wordDAO = realm.object(ofType: WordDAO.self, forPrimaryKey: wordId.raw) else {
-                throw RealmWordError.wordNotFoundInRealm(wordId)
-            }
+        try await makeRealmCUD(operation: { (realm, word) in
+            let wordDAO = try realm.findWordBy(id: wordId)
 
             realm.delete(wordDAO)
         }, with: Word())

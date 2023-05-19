@@ -16,14 +16,8 @@ struct WordDetailsFetcherImpl: WordDetailsFetcher {
 
     func wordDetails(_ id: Word.Id) throws -> WordDetailsVO {
         let realm = try Realm()
-        guard let wordDAO = realm.object(ofType: WordDAO.self, forPrimaryKey: id.raw) else {
-            throw WordDetailsFetcherError.wordDetailsNotFound(id)
-        }
+        let wordDAO = try realm.findWordBy(id: id)
 
         return WordDetailsVO(title: wordDAO.text, entry: Array(wordDAO.dictionaryEntry))
     }
-}
-
-enum WordDetailsFetcherError: Error {
-    case wordDetailsNotFound(Word.Id)
 }

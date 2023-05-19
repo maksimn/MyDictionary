@@ -10,7 +10,7 @@ import Foundation
 
 struct LinkToNewWord: ReducerProtocol {
 
-    let config: Config
+    let langData: LangData
 
     struct State: Equatable {
         var newWord: NewWord.State?
@@ -30,7 +30,7 @@ struct LinkToNewWord: ReducerProtocol {
             return .none
         }
         .ifLet(\.newWord, action: /Action.newWord) {
-            NewWord(langRepository: LangRepositoryImpl(userDefaults: UserDefaults.standard, data: config.langData))
+            NewWord(langRepository: LangRepositoryImpl(userDefaults: UserDefaults.standard, data: langData))
         }
     }
 }
