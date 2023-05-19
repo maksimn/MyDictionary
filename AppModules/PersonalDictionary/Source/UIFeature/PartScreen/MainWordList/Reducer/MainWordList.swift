@@ -19,7 +19,7 @@ struct MainWordList: ReducerProtocol {
 
     enum Action {
         case loadSavedMainWordList
-        case loadSavedMainWordListResult(TaskResult<[Word]>)
+        case loadSavedMainWordListResult(TaskResult<[WordVO]>)
         case createWord(Word)
         case createWordResult(TaskResult<Word>)
         case wordList(WordList.Action)
@@ -42,23 +42,23 @@ struct MainWordList: ReducerProtocol {
         switch action {
         case .loadSavedMainWordList:
             return .run { send in
-                await send(.loadSavedMainWordListResult(TaskResult { try wordListFetcher.wordList() }))
+                await send(.loadSavedMainWordListResult(
+                    TaskResult { try wordListFetcher.wordList().map { WordVO($0) } })
+                )
             }
 
         case .loadSavedMainWordListResult(.success(let wordList)):
-            state.wordList.wordList = IdentifiedArrayOf(
-                uniqueElements: wordList.map { IdentifiedWord(word: $0) }
-            )
+            state.wordList.wordList = IdentifiedArrayOf(uniqueElements: wordList)
 
         case .createWord(let word):
-            state.wordList.wordList.insert(IdentifiedWord(word: word), at: 0)
+            state.wordList.wordList.insert(WordVO(word), at: 0)
 
             return .run { send in
                 await send(.createWordResult(TaskResult { try await createWordEffect.run(word) }))
             }
 
         case .createWordResult(.success(let word)):
-            return .send(.wordList(.wordUpdated(word)))
+            return .send(.wordList(.wordUpdated(WordVO(word))))
 
         default:
             break

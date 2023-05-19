@@ -7,7 +7,7 @@
 
 protocol DeleteWordDbWorker {
 
-    func delete(word: Word) async throws -> Word
+    func delete(wordId: Word.Id) async throws -> Word.Id
 }
 
 struct DeleteWordDbWorkerImpl: DeleteWordDbWorker {
@@ -18,13 +18,13 @@ struct DeleteWordDbWorkerImpl: DeleteWordDbWorker {
         self.realmFactory = realmFactory
     }
 
-    func delete(word: Word) async throws -> Word {
+    func delete(wordId: Word.Id) async throws -> Word.Id {
         try await make(operation: { (realm, word) in
-            guard let wordDAO = realm.object(ofType: WordDAO.self, forPrimaryKey: word.id.raw) else { return }
+            guard let wordDAO = realm.object(ofType: WordDAO.self, forPrimaryKey: wordId.raw) else { return }
 
             realm.delete(wordDAO)
-        }, with: word, realmFactory: realmFactory)
+        }, with: Word(), realmFactory: realmFactory)
 
-        return word
+        return wordId
     }
 }
