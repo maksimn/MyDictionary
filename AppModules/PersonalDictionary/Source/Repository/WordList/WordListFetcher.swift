@@ -14,18 +14,8 @@ protocol WordListFetcher {
 
 struct WordListFetcherImpl: WordListFetcher {
 
-    private let realmFactory: RealmFactory
-
-    init(realmFactory: RealmFactory) {
-        self.realmFactory = realmFactory
-    }
-
     func wordList() throws -> [Word] {
-        guard let realm = realmFactory.create() else {
-            throw RealmFactoryError.realmNotCreated
-        }
-
-        return realm.objects(WordDAO.self)
+        try Realm().objects(WordDAO.self)
             .sorted(byKeyPath: "createdAt", ascending: false)
             .compactMap { Word($0) }
     }

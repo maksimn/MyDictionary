@@ -12,17 +12,13 @@ protocol UpdateWordDbWorker {
 
 struct UpdateWordDbWorkerImpl: UpdateWordDbWorker {
 
-    private let realmFactory: RealmFactory
-
-    init(realmFactory: RealmFactory) {
-        self.realmFactory = realmFactory
-    }
-
     func update(word: Word) async throws {
         try await make(operation: { (realm, word) in
-            guard let wordDAO = realm.object(ofType: WordDAO.self, forPrimaryKey: word.id.raw) else { return }
+            guard let wordDAO = realm.object(ofType: WordDAO.self, forPrimaryKey: word.id.raw) else {
+                throw RealmWordError.wordNotFoundInRealm(word.id)
+            }
 
             wordDAO.update(from: word)
-        }, with: word, realmFactory: realmFactory)
+        }, with: word)
     }
 }

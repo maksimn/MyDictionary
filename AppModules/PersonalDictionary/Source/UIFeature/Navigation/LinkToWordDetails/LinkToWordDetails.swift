@@ -23,9 +23,7 @@ struct LinkToWordDetails: View {
                         initialState: .init(),
                         reducer: WordDetails(
                             id: wordId,
-                            fetcher: WordDetailsFetcherImpl(
-                                realmFactory: RealmFactoryImpl(logger: LoggerImpl(category: "WordDetails"))
-                            )
+                            fetcher: WordDetailsFetcherImpl()
                         )._printChanges()
                     ),
                     theme: Theme.data

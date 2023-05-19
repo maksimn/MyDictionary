@@ -7,19 +7,25 @@
 
 import RealmSwift
 
-func make(operation: (Realm, Word) -> Void, with word: Word, realmFactory: RealmFactory) async throws {
+func make(operation: (Realm, Word) throws -> Void, with word: Word) async throws {
     return try await withCheckedThrowingContinuation { continuation in
-        guard let realm = realmFactory.create() else {
-            return continuation.resume(throwing: RealmFactoryError.realmNotCreated)
-        }
-
         do {
+            let realm = try Realm()
+
             try realm.write {
-                operation(realm, word)
-                continuation.resume()
+                do {
+                    try operation(realm, word)
+                    continuation.resume()
+                } catch {
+                    continuation.resume(throwing: error)
+                }
             }
         } catch {
             continuation.resume(throwing: error)
         }
     }
+}
+
+enum RealmWordError: Error {
+    case wordNotFoundInRealm(Word.Id)
 }

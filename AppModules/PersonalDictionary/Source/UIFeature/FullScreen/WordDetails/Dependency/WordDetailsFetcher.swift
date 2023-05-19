@@ -5,6 +5,8 @@
 //  Created by Maksim Ivanov on 07.05.2023.
 //
 
+import RealmSwift
+
 protocol WordDetailsFetcher {
 
     func wordDetails(_ id: Word.Id) throws -> WordDetailsVO
@@ -12,18 +14,10 @@ protocol WordDetailsFetcher {
 
 struct WordDetailsFetcherImpl: WordDetailsFetcher {
 
-    private let realmFactory: RealmFactory
-
-    init(realmFactory: RealmFactory) {
-        self.realmFactory = realmFactory
-    }
-
     func wordDetails(_ id: Word.Id) throws -> WordDetailsVO {
-        guard let realm = realmFactory.create() else {
-            throw RealmFactoryError.realmNotCreated
-        }
+        let realm = try Realm()
         guard let wordDAO = realm.object(ofType: WordDAO.self, forPrimaryKey: id.raw) else {
-            throw WordDetailsFetcherError.wordDetailsNotFound
+            throw WordDetailsFetcherError.wordDetailsNotFound(id)
         }
 
         return WordDetailsVO(title: wordDAO.text, entry: Array(wordDAO.dictionaryEntry))
@@ -31,5 +25,5 @@ struct WordDetailsFetcherImpl: WordDetailsFetcher {
 }
 
 enum WordDetailsFetcherError: Error {
-    case wordDetailsNotFound
+    case wordDetailsNotFound(Word.Id)
 }

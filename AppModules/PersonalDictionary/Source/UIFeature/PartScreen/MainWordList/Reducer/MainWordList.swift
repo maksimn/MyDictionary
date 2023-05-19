@@ -30,11 +30,7 @@ struct MainWordList: ReducerProtocol {
             reduceInto(&state, action: action)
         }
         Scope(state: \.wordList, action: /Action.wordList) {
-            WordList(
-                deleteWordDbWorker: DeleteWordDbWorkerImpl(
-                    realmFactory: RealmFactoryImpl(logger: LoggerImpl(category: "WordList"))
-                )
-            )
+            WordList(deleteWordDbWorker: DeleteWordDbWorkerImpl())
         }
     }
 

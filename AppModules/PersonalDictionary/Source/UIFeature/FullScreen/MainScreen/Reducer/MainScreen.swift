@@ -28,10 +28,10 @@ struct MainScreen: ReducerProtocol {
         }
         Scope(state: \.mainWordList, action: /Action.mainWordList) {
             MainWordList(
-                wordListFetcher: WordListFetcherImpl(realmFactory: realmFactory()),
+                wordListFetcher: WordListFetcherImpl(),
                 createWordEffect: CreateWordEffectImpl(
-                    createWordDbWorker: CreateWordDbWorkerImpl(realmFactory: realmFactory()),
-                    updateWordDbWorker: UpdateWordDbWorkerImpl(realmFactory: realmFactory()),
+                    createWordDbWorker: CreateWordDbWorkerImpl(),
+                    updateWordDbWorker: UpdateWordDbWorkerImpl(),
                     dictionaryService: PonsDictionaryService(
                         secret: config.translationApiKey,
                         httpClient: LoggableHttpClient(logger: logger()),
@@ -62,9 +62,5 @@ struct MainScreen: ReducerProtocol {
 
     private func logger() -> Logger {
         LoggerImpl(category: "MainWordList")
-    }
-
-    private func realmFactory() -> RealmFactory {
-        RealmFactoryImpl(logger: logger())
     }
 }
