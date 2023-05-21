@@ -12,14 +12,14 @@ import Foundation
 final class PonsDictionaryService: DictionaryService {
 
     private let secret: String
-    private let httpClient: HttpClient
+    private let httpClient: HttpClientAdapter
     private let decoder: DictionaryEntryDecoder
 
     private let apiUrl = "https://api.pons.com/v1/dictionary"
 
     private var cancellables: Set<AnyCancellable> = []
 
-    init(secret: String, httpClient: HttpClient, decoder: DictionaryEntryDecoder) {
+    init(secret: String, httpClient: HttpClientAdapter, decoder: DictionaryEntryDecoder) {
         self.secret = secret
         self.httpClient = httpClient
         self.decoder = decoder
@@ -40,37 +40,16 @@ final class PonsDictionaryService: DictionaryService {
             headers: ["X-Secret": secret]
         )
 
-        let data = try await fetchData(http)
+        let httpResult = try await httpClient.send(http)
+
+        guard httpResult.response.statusCode == 200 else {
+            throw PonsDictionaryServiceError.dictionaryDataNotFetched(http)
+        }
         var word = word
 
-        word.dictionaryEntry = try await decoder.decode(data, word: word)
+        word.dictionaryEntry = try await decoder.decode(httpResult.data, word: word)
 
         return word
-    }
-
-    private func fetchData(_ http: Http) async throws -> Data {
-        try await withCheckedThrowingContinuation { continuation in
-            httpClient.send(http)
-                .sink(
-                    receiveCompletion: { completion in
-                        switch completion {
-                        case .failure(let error):
-                            continuation.resume(throwing: error)
-                        case .finished:
-                            break
-                        }
-                    },
-                    receiveValue: { httpResponse in
-                        guard httpResponse.response.statusCode == 200 else {
-                            return continuation.resume(
-                                throwing: PonsDictionaryServiceError.dictionaryDataNotFetched(http)
-                            )
-                        }
-
-                        continuation.resume(returning: httpResponse.data)
-                    }
-                ).store(in: &self.cancellables)
-        }
     }
 }
 
