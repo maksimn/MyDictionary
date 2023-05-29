@@ -20,7 +20,8 @@ struct MainWordListView: View {
     var body: some View {
         WithViewStore(self.store, observe: \.wordList) { viewStore in
             WordListView(
-                store: store.scope(state: \.wordList, action: MainWordList.Action.wordList)
+                store: store.scope(state: \.wordList, action: MainWordList.Action.wordList),
+                theme: Theme.data
             )
         }
     }
