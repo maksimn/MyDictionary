@@ -1,6 +1,6 @@
 //
 //  Word.swift
-//  
+//  PersonalDictionary
 //
 //  Created by Maksim Ivanov on 07.05.2023.
 //
@@ -31,6 +31,7 @@ struct Word: Equatable, CustomStringConvertible {
     init(
         id: Id = Id(raw: UUID().uuidString),
         text: String = "",
+        dictionaryEntry: DictionaryEntry = [],
         sourceLang: Lang = .init(id: .init(raw: -1), name: "", shortName: ""),
         targetLang: Lang = .init(id: .init(raw: -1), name: "", shortName: ""),
         isFavorite: Bool = false,
@@ -38,6 +39,7 @@ struct Word: Equatable, CustomStringConvertible {
     ) {
         self.id = id
         self.text = text
+        self.dictionaryEntry = dictionaryEntry
         self.sourceLang = sourceLang
         self.targetLang = targetLang
         self.isFavorite = isFavorite
@@ -48,11 +50,20 @@ struct Word: Equatable, CustomStringConvertible {
         """
         Word(id: \(id.raw), \
         text: \(text), \
+        dictionaryEntry: \(dictionaryEntryDescription), \
         sourceLang: \(sourceLang.id.raw), \
         targetLang: \(targetLang.id.raw), \
         isFavorite: \(isFavorite), \
         createdAt: \(createdAt))
         """
+    }
+
+    private var dictionaryEntryDescription: String {
+        let count = dictionaryEntry.count
+
+        return dictionaryEntry.isEmpty ?
+            "<empty>" :
+            "[\(dictionaryEntry.first ?? "")\(count > 1 ? ", ...\(count - 1) values" : "")]"
     }
 }
 
@@ -62,6 +73,7 @@ struct WordVO: Equatable, Identifiable {
     let translation: String
     let sourceLang: String
     let targetLang: String
+    var isFavorite: Bool
 
     init(_ word: Word) {
         _id = word.id
@@ -69,6 +81,7 @@ struct WordVO: Equatable, Identifiable {
         translation = word.dictionaryEntry.first ?? ""
         sourceLang = word.sourceLang.shortName
         targetLang = word.targetLang.shortName
+        isFavorite = word.isFavorite
     }
 
     var id: String {

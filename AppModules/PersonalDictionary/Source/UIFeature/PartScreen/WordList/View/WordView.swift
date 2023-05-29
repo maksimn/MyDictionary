@@ -14,6 +14,14 @@ struct WordView: View {
 
     var body: some View {
         HStack {
+            VStack {
+                if word.isFavorite {
+                    Text("★")
+                        .font(.system(size: 22))
+                        .foregroundColor(theme.goldColor)
+                }
+            }
+            .frame(minWidth: 0, maxWidth: 24, minHeight: 0, maxHeight: 54)
             VStack(alignment: .leading) {
                 Text(word.text)
                     .lineLimit(1)

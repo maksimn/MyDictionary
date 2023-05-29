@@ -29,7 +29,13 @@ struct MainWordList: ReducerProtocol {
             reduceInto(&state, action: action)
         }
         Scope(state: \.wordList, action: /Action.wordList) {
-            WordList(deleteWordDbWorker: DeleteWordDbWorkerImpl())
+            WordList(
+                toggleWordIsFavoriteEffect: ToggleWordIsFavoriteEffectImpl(
+                    findWordDbWorker: FindWordDbWorkerImpl(),
+                    updateWordDbWorker: UpdateWordDbWorkerImpl()
+                ),
+                deleteWordDbWorker: DeleteWordDbWorkerImpl()
+            )
         }
     }
 
