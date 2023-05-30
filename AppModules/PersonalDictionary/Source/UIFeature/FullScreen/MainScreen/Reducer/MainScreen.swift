@@ -6,7 +6,6 @@
 //
 
 import ComposableArchitecture
-import CoreModule
 
 struct MainScreen: ReducerProtocol {
 
@@ -36,8 +35,6 @@ struct MainScreen: ReducerProtocol {
 
     private func reduceInto(_ state: inout State, action: Action) -> EffectTask<Action> {
         if case .linkToNewWord(.newWord(.sendNewWord(let word))) = action {
-            guard let word = word else { return .none }
-
             return .send(.mainWordList(.createWord(word)))
         }
 

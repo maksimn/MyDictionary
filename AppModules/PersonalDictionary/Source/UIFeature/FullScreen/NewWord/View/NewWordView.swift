@@ -89,9 +89,11 @@ struct NewWordView<ViewType>: View where ViewType: View {
             sourceLang: viewStore.sourceLang,
             targetLang: viewStore.targetLang
         )
-        let newWord = word.text.isEmpty ? nil : word
 
-        viewStore.send(.sendNewWord(newWord))
+        if !word.text.isEmpty {
+            viewStore.send(.sendNewWord(word))
+        }
+
         self.presentationMode.wrappedValue.dismiss()
     }
 }

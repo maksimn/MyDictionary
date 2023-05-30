@@ -24,7 +24,7 @@ struct NewWord: ReducerProtocol {
     enum Action {
         case setInitialState
         case textChanged(String)
-        case sendNewWord(Word?)
+        case sendNewWord(Word)
         case langPicker(LangPicker.Action)
     }
 
