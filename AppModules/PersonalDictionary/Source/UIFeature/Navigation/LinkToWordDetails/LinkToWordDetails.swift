@@ -6,7 +6,6 @@
 //
 
 import ComposableArchitecture
-import CoreModule
 import SwiftUI
 
 struct LinkToWordDetails: View {

@@ -5,25 +5,16 @@
 //  Created by Maxim Ivanov on 09.10.2021.
 //
 
-import Combine
 import CoreModule
 import Foundation
 
-final class PonsDictionaryService: DictionaryService {
+struct PonsDictionaryService: DictionaryService {
 
-    private let secret: String
-    private let httpClient: HttpClientAdapter
-    private let decoder: DictionaryEntryDecoder
+    let secret: String
+    let httpClient: HttpClientAdapter
+    let decoder: DictionaryEntryDecoder
 
     private let apiUrl = "https://api.pons.com/v1/dictionary"
-
-    private var cancellables: Set<AnyCancellable> = []
-
-    init(secret: String, httpClient: HttpClientAdapter, decoder: DictionaryEntryDecoder) {
-        self.secret = secret
-        self.httpClient = httpClient
-        self.decoder = decoder
-    }
 
     func fetchDictionaryEntry(for word: Word) async throws -> Word {
         let sourceLang = word.sourceLang.shortName.lowercased()
@@ -39,11 +30,10 @@ final class PonsDictionaryService: DictionaryService {
             urlString: apiUrl + (query.string ?? ""),
             headers: ["X-Secret": secret]
         )
-
         let httpResult = try await httpClient.send(http)
 
         guard httpResult.response.statusCode == 200 else {
-            throw PonsDictionaryServiceError.dictionaryDataNotFetched(http)
+            throw _Error.dictionaryDataNotFetched(http)
         }
         var word = word
 
@@ -51,8 +41,8 @@ final class PonsDictionaryService: DictionaryService {
 
         return word
     }
-}
 
-enum PonsDictionaryServiceError: Error {
-    case dictionaryDataNotFetched(Http)
+    enum _Error: Error {
+        case dictionaryDataNotFetched(Http)
+    }
 }
