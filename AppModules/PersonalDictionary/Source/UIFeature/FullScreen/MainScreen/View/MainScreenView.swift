@@ -8,6 +8,11 @@
 import ComposableArchitecture
 import SwiftUI
 
+private let networkIndicatorStore = StoreOf<NetworkIndicator>(
+    initialState: .init(),
+    reducer: NetworkIndicator(httpRequestCount: HttpRequestCount.instance)._printChanges()
+)
+
 struct MainScreenView: View {
 
     let title: String
@@ -33,6 +38,9 @@ struct MainScreenView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     EditButton()
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NetworkIndicatorView(store: networkIndicatorStore)
                 }
             }
             .navigationTitle(title)
