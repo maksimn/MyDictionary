@@ -20,7 +20,7 @@ extension MainWordList {
             updateWordDbWorker: UpdateWordDbWorkerImpl(),
             dictionaryService: PonsDictionaryService(
                 secret: translationApiKey,
-                httpClient: HttpClientAdapterImpl(),
+                httpClient: CountableHttpClient(),
                 decoder: PonsDictionaryEntryDecoder()
             ),
             logger: logger()

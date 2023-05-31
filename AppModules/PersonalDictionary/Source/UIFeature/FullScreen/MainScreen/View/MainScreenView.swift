@@ -34,6 +34,11 @@ struct MainScreenView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     EditButton()
                 }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NetworkIndicatorView(
+                        store: store.scope(state: \.networkIndicator, action: MainScreen.Action.networkIndicator)
+                    )
+                }
             }
             .navigationTitle(title)
         }

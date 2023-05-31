@@ -14,11 +14,13 @@ struct MainScreen: ReducerProtocol {
     struct State: Equatable {
         var mainWordList = MainWordList.State()
         var linkToNewWord = LinkToNewWord.State()
+        var networkIndicator = NetworkIndicator.State()
     }
 
     enum Action {
         case mainWordList(MainWordList.Action)
         case linkToNewWord(LinkToNewWord.Action)
+        case networkIndicator(NetworkIndicator.Action)
     }
 
     var body: some ReducerProtocolOf<MainScreen> {
@@ -30,6 +32,9 @@ struct MainScreen: ReducerProtocol {
         }
         Scope(state: \.linkToNewWord, action: /Action.linkToNewWord) {
             LinkToNewWord(langData: config.langData)
+        }
+        Scope(state: \.networkIndicator, action: /Action.networkIndicator) {
+            NetworkIndicator(httpRequestCount: HttpRequestCount.instance)
         }
     }
 
