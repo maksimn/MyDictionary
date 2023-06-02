@@ -12,6 +12,14 @@ private let networkIndicatorStore = StoreOf<NetworkIndicator>(
     initialState: .init(),
     reducer: NetworkIndicator(httpRequestCount: HttpRequestCount.instance)._printChanges()
 )
+private let errorToastStore = StoreOf<ErrorToast>(
+    initialState: .init(),
+    reducer: ErrorToast(
+        errorMessageStream: ErrorMessageStreamImpl.instance,
+        clock: ContinuousClock(),
+        durationSeconds: 6
+    )._printChanges()
+)
 
 struct MainScreenView: View {
 
@@ -33,6 +41,10 @@ struct MainScreenView: View {
                         store: store.scope(state: \.linkToNewWord, action: MainScreen.Action.linkToNewWord)
                     )
                 }
+                ErrorToastView(
+                    store: errorToastStore,
+                    theme: Theme.data
+                )
             }
             .background(theme.backgroundColor)
             .toolbar {
