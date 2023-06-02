@@ -14,14 +14,20 @@ private func logger() -> Logger {
 extension MainWordList {
 
     init(translationApiKey: String) {
+        let ponsDictionaryService = PonsDictionaryService(
+            secret: translationApiKey,
+            httpClient: CountableHttpClient(),
+            decoder: PonsDictionaryEntryDecoder()
+        )
+
         self.wordListFetcher = WordListFetcherImpl()
         self.createWordEffect = CreateWordEffectImpl(
             createWordDbWorker: CreateWordDbWorkerImpl(),
             updateWordDbWorker: UpdateWordDbWorkerImpl(),
-            dictionaryService: PonsDictionaryService(
-                secret: translationApiKey,
-                httpClient: CountableHttpClient(),
-                decoder: PonsDictionaryEntryDecoder()
+            dictionaryService: ErrorSendableDictionaryService(
+                dictionaryService: ponsDictionaryService,
+                errorMessageSender: ErrorMessageStreamImpl.instance,
+                messageTemplate: "Failed to get data about the word \"%s\""
             ),
             logger: logger()
         )

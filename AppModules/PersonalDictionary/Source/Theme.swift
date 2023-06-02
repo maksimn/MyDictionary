@@ -19,6 +19,8 @@ struct Theme {
 
     let secondaryTextColor: Color
 
+    let inversedTextColor: Color
+
     let normalFont: Font
 
     private init(backgroundColor: Color,
@@ -26,12 +28,14 @@ struct Theme {
                  cellColor: Color,
                  textColor: Color,
                  secondaryTextColor: Color,
+                 inversedTextColor: Color,
                  normalFont: Font) {
         self.backgroundColor = backgroundColor
         self.goldColor = goldColor
         self.cellColor = cellColor
         self.textColor = textColor
         self.secondaryTextColor = secondaryTextColor
+        self.inversedTextColor = inversedTextColor
         self.normalFont = normalFont
     }
 
@@ -41,6 +45,7 @@ struct Theme {
         cellColor: Color("Cell", bundle: Bundle.module),
         textColor: Color("Text", bundle: Bundle.module),
         secondaryTextColor: Color("SecondaryText", bundle: Bundle.module),
+        inversedTextColor: Color("InversedText", bundle: Bundle.module),
         normalFont: Font.system(size: 17)
     )
 }
