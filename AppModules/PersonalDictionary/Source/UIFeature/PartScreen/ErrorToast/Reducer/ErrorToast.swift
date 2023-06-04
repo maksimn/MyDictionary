@@ -30,7 +30,7 @@ struct ErrorToast: ReducerProtocol {
         case .initialize:
             return .run { send in
                 for await errorMessage in errorMessageStream.error {
-                    await send(.show(errorMessage))
+                    await send(.show(errorMessage), animation: .easeIn)
                     await send(.hideAfterDelay)
                 }
             }
@@ -48,7 +48,7 @@ struct ErrorToast: ReducerProtocol {
         case .hideAfterDelay:
             return .run { send in
                 try await clock.sleep(for: .seconds(durationSeconds))
-                await send(.hide)
+                await send(.hide, animation: .easeOut)
             }
         }
 
