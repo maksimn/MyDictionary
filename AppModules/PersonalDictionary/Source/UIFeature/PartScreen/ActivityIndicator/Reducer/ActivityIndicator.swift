@@ -1,5 +1,5 @@
 //
-//  NetworkIndicator.swift
+//  ActivityIndicator.swift
 //  PersonalDictionary
 //
 //  Created by Maksim Ivanov on 07.05.2023.
@@ -7,9 +7,9 @@
 
 import ComposableArchitecture
 
-struct NetworkIndicator: ReducerProtocol {
+struct ActivityIndicator: ReducerProtocol {
 
-    let httpRequestCount: HttpRequestCountStream
+    let activityCount: ActivityCountStream
 
     struct State: Equatable {
         var isVisible = false
@@ -25,7 +25,7 @@ struct NetworkIndicator: ReducerProtocol {
         switch action {
         case .initialize:
             return .run { send in
-                for await count in httpRequestCount.count {
+                for await count in activityCount.count {
                     await send(count > 0 ? .show : .hide)
                 }
             }
