@@ -26,6 +26,7 @@ struct ErrorToastView: View {
                     .padding(.init(top: 0, leading: 16, bottom: 0, trailing: 16))
                     .background(Color.red)
                     .cornerRadius(8)
+                    Spacer().frame(height: 20)
                 }
             }
             .onAppear {

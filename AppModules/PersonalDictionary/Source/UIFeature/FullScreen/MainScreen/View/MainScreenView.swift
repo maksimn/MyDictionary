@@ -17,7 +17,7 @@ private let errorToastStore = StoreOf<ErrorToast>(
     reducer: ErrorToast(
         errorMessageStream: ErrorMessageStreamImpl.instance,
         clock: ContinuousClock(),
-        durationSeconds: 6
+        durationSeconds: 4
     )._printChanges()
 )
 
@@ -36,15 +36,15 @@ struct MainScreenView: View {
                 )
                 VStack {
                     Spacer()
+                    ErrorToastView(
+                        store: errorToastStore,
+                        theme: theme
+                    )
                     LinkToNewWordView(
                         allLangs: allLangs,
                         store: store.scope(state: \.linkToNewWord, action: MainScreen.Action.linkToNewWord)
                     )
                 }
-                ErrorToastView(
-                    store: errorToastStore,
-                    theme: Theme.data
-                )
             }
             .background(theme.backgroundColor)
             .toolbar {
