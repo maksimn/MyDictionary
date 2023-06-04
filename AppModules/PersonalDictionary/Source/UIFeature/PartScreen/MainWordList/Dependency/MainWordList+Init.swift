@@ -7,29 +7,30 @@
 
 import CoreModule
 
-private func logger() -> Logger {
-    LoggerImpl(category: "MainWordList")
-}
-
 extension MainWordList {
 
     init(translationApiKey: String) {
         let ponsDictionaryService = PonsDictionaryService(
             secret: translationApiKey,
-            httpClient: CountableHttpClient(),
+            httpClient: HttpClientAdapterImpl(),
             decoder: PonsDictionaryEntryDecoder()
+        )
+        let countablePonsDictionaryService = CountableDictionaryService(
+            dictionaryService: ponsDictionaryService,
+            mutator: ActivityCount.instance
+        )
+        let errorSendableCountablePonsDictionaryService = ErrorSendableDictionaryService(
+            dictionaryService: countablePonsDictionaryService,
+            errorMessageSender: ErrorMessageStreamImpl.instance,
+            messageTemplate: "Failed to get data about the word '%@'"
         )
 
         self.wordListFetcher = WordListFetcherImpl()
         self.createWordEffect = CreateWordEffectImpl(
             createWordDbWorker: CreateWordDbWorkerImpl(),
             updateWordDbWorker: UpdateWordDbWorkerImpl(),
-            dictionaryService: ErrorSendableDictionaryService(
-                dictionaryService: ponsDictionaryService,
-                errorMessageSender: ErrorMessageStreamImpl.instance,
-                messageTemplate: "Failed to get data about the word '%@'"
-            ),
-            logger: logger()
+            dictionaryService: errorSendableCountablePonsDictionaryService,
+            logger: LoggerImpl(category: "MainWordList")
         )
     }
 }

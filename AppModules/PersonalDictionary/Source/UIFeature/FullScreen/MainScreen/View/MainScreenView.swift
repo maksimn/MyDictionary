@@ -8,16 +8,16 @@
 import ComposableArchitecture
 import SwiftUI
 
-private let networkIndicatorStore = StoreOf<NetworkIndicator>(
+private let activityCountStore = StoreOf<ActivityIndicator>(
     initialState: .init(),
-    reducer: NetworkIndicator(httpRequestCount: HttpRequestCount.instance)._printChanges()
+    reducer: ActivityIndicator(activityCount: ActivityCount.instance)._printChanges()
 )
 private let errorToastStore = StoreOf<ErrorToast>(
     initialState: .init(),
     reducer: ErrorToast(
         errorMessageStream: ErrorMessageStreamImpl.instance,
         clock: ContinuousClock(),
-        durationSeconds: 4
+        durationSeconds: 3
     )._printChanges()
 )
 
@@ -40,6 +40,7 @@ struct MainScreenView: View {
                         store: errorToastStore,
                         theme: theme
                     )
+                    Spacer().frame(height: 20)
                     LinkToNewWordView(
                         allLangs: allLangs,
                         store: store.scope(state: \.linkToNewWord, action: MainScreen.Action.linkToNewWord)
@@ -52,7 +53,7 @@ struct MainScreenView: View {
                     EditButton()
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    NetworkIndicatorView(store: networkIndicatorStore)
+                    ActivityIndicatorView(store: activityCountStore)
                 }
             }
             .navigationTitle(title)

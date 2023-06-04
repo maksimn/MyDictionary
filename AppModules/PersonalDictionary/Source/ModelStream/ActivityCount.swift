@@ -5,21 +5,21 @@
 //  Created by Maksim Ivanov on 06.05.2023.
 //
 
-protocol HttpRequestCountMutator {
+protocol ActivityCountMutator {
 
     func increment()
 
     func decrement()
 }
 
-protocol HttpRequestCountStream {
+protocol ActivityCountStream {
 
     var count: AsyncStream<Int> { get }
 }
 
-final class HttpRequestCount: HttpRequestCountMutator, HttpRequestCountStream {
+final class ActivityCount: ActivityCountMutator, ActivityCountStream {
 
-    static let instance = HttpRequestCount()
+    static let instance = ActivityCount()
 
     private var onUpdate: ((Int) -> Void)?
 

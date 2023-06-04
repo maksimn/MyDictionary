@@ -24,7 +24,6 @@ let package = Package(
             name: "PersonalDictionary",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "Realm", package: "realm-swift"),
                 .product(name: "RealmSwift", package: "realm-swift"),
                 "CoreModule"
             ],
