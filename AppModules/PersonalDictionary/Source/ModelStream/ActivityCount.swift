@@ -5,6 +5,8 @@
 //  Created by Maksim Ivanov on 06.05.2023.
 //
 
+import Dispatch
+
 protocol ActivityCountMutator {
 
     func increment()
@@ -25,6 +27,8 @@ final class ActivityCount: ActivityCountMutator, ActivityCountStream {
 
     private var value = 0
 
+    private let queue = DispatchQueue(label: "io.github.maksimn.pd.activitycount", attributes: .concurrent)
+
     private init() { }
 
     private(set) lazy var count = AsyncStream<Int> { continuation in
@@ -36,11 +40,23 @@ final class ActivityCount: ActivityCountMutator, ActivityCountStream {
     }
 
     func increment() {
+        queue.async(flags: .barrier) {
+            self.doIncrement()
+        }
+    }
+
+    func decrement() {
+        queue.async(flags: .barrier) {
+            self.doDecrement()
+        }
+    }
+
+    private func doIncrement() {
         value += 1
         onUpdate?(value)
     }
 
-    func decrement() {
+    private func doDecrement() {
         if value > 0 {
             value -= 1
             onUpdate?(value)
